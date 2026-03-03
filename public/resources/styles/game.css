@@ -1,0 +1,142 @@
+body{
+    background-image: url(../../images/fondo_cementerio.png);
+    background-repeat: no-repeat;
+    background-size: 100% 120%;
+}
+
+header {
+    padding: 1rem;
+    text-align: center;
+    margin-top: -8rem;
+}
+
+h1{
+    background-image: url(../../images/back_lugar.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50% 50%;
+    padding: 6rem 1rem;
+    text-align: center;
+}
+
+#sentencias{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#tablas{
+    background-image: url(../../images/back_titulo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 80%;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    margin-right: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tablas p{
+    font-size: 2rem;
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+ul{
+    list-style-type: none;
+    padding: 0.2rem;
+}
+
+li{
+    margin: 1rem;
+}
+
+#sentencia{
+    background-image: url(../../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 2rem 1rem;
+    background-color: transparent; /* Quita el fondo blanco */
+    border: none;                  /* Quita el borde */
+    outline: none;                 /* Quita el contorno azul al hacer clic */
+    resize: none;                  /* Evita que el usuario pueda redimensionar el textarea */
+    field-sizing: content;
+    min-height: 5rem;
+    min-width: 25rem;
+    margin-bottom: 1rem;
+}
+
+#escribir{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+#juego{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: -8rem;
+    margin-bottom: 2rem;
+}
+
+#jugador{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#jugador-img{
+    margin-top: -1.5rem;
+}
+
+#jugador-vida{
+    background-color: rgba(113, 227, 88, 0.65); /* Alice blue with 15% opacity */
+    padding: 0.2rem;
+    border-radius: 0.5rem;
+}
+
+#mision{
+    margin-left: -10rem;
+    margin-right: -10rem;
+}
+
+#mision p {
+    background-image: url(../../images/back_titulo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 2rem 1rem;
+    text-align: center;
+    width: 20rem;
+    margin-left: -6rem;
+    margin-right: -6rem;
+}
+
+#enemigos{
+    display: flex;
+}
+
+.enemigo{
+    padding: 1rem;
+}
+
+#enemigo-vida{
+    background-color: rgba(169, 46, 46, 0.65); /* Alice blue with 15% opacity */
+    text-align: center;
+    padding: 0.2rem;
+    border-radius: 1rem;
+}
+
+.vida-enemigo{
+    width: 3rem;
+}
+
+.enemigo-img{
+    width: 10rem;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="Nigromante de datos corruptos" content="width=device-width, initial-scale=1.0">
+        <title>Nigromante de datos corruptos</title>
+        <link rel="stylesheet" href="resources/styles/game.css">
+        <link rel="stylesheet" href="resources/styles/web.css">
+        <script src="resources/scripts/juego.js" defer></script>
+        <script src="resources/scripts/wsinvocation_game.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>Cementerio maldito</h1>
+        </header>
+        <main>
+            <div id="juego">
+                <div id="jugador">
+                    <p id="jugador-vida">Vida: 100</p>
+                    <img src="images/nigromante.png" alt="Personaje del jugador" id="jugador-img">
+                </div>
+                <div id="mision">
+                    <p>Invoca a un fantasma para derrotar al enemigo</p>
+                </div>
+                <div id="enemigos">
+                    <div class="enemigo">  
+                        <div id="enemigo-vida">
+                            <img src="images/corazon.png" alt="corazón del enemigo" class="vida-enemigo">
+                            <img src="images/corazon.png" alt="corazón del enemigo" class="vida-enemigo">
+                            <img src="images/corazon.png" alt="corazón del enemigo" class="vida-enemigo">
+                        </div>
+                        <img src="images/enemigo.png" alt="Personaje del enemigo" class="enemigo-img">
+                    </div>
+                </div>
+            </div>
+            <div id="historia">
+
+            </div>
+            <div id="sentencias">
+                <div id="tablas">
+                    <p>Tablas disponibles:</p>
+                    <ul id="tablas-lista">
+                        <li><button>Almas</button></li>
+                    </ul>
+                </div>
+                <div id="escribir">
+                    <textarea id="sentencia" placeholder="Escribe tu sentencia SQL aquí..."></textarea>
+                    <button id="enviar"> Invocar </button>
+                </div>
+            </div>
+            
+        </main>
+    </body>
+</html>

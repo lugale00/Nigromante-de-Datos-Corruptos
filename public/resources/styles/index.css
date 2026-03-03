@@ -1,0 +1,29 @@
+body{
+    background-image: url(../../images/background.png);
+    background-repeat: no-repeat;
+    background-size: 100% 120%;
+}
+
+header {
+    padding: 1rem;
+    text-align: center;
+    margin-top: -3.5rem;
+}
+
+h1{
+    background-image: url(../../images/back_titulo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 2rem 3rem;
+    text-align: center;
+}
+
+#text_cont{
+    background-image: url(../../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 74% 100%;
+    padding: 2rem 1rem;
+    text-align: center;
+    margin-top: -3rem;
+}
