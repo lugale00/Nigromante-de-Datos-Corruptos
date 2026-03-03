@@ -30,6 +30,7 @@ const pool = require('./routes/db');
 // Rutas
 app.listen(port, async () => {
     try {
+        pool.connect();
         console.log('Conectado a PostgreSQL');
     } catch (err) {
         console.error('Error al conectar a PostgreSQL:', err);
