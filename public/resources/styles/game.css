@@ -77,12 +77,34 @@ li{
     margin-top: 1rem;
 }
 
+#resultado-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.resultado{
+    background-image: url(../../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 2rem 1rem;
+    background-color: transparent; /* Quita el fondo blanco */
+    border: none;                  /* Quita el borde */
+    outline: none;                 /* Quita el contorno azul al hacer clic */
+    resize: none;                  /* Evita que el usuario pueda redimensionar el textarea */
+    field-sizing: content;
+    margin-left: 1rem;
+    margin-bottom: 2rem;
+}
+
 #juego{
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin-top: -8rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 #jugador{
