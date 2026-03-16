@@ -1,7 +1,7 @@
 body{
     background-image: url(../../images/background.png);
     background-repeat: no-repeat;
-    background-size: 100% 120%;
+    background-size: 100%;
 }
 
 header {
@@ -22,8 +22,35 @@ h1{
     background-image: url(../../images/back_text.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 74% 100%;
+    background-size: 65% 100%;
     padding: 2rem 1rem;
     text-align: center;
     margin-top: -3rem;
+}
+
+#formulario{
+    background-image: url(../../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 30% 100%;
+    padding-top: 1rem;
+    padding-bottom: 2.5rem;
+    text-align: center;
+}
+
+input{
+    margin-top: -1rem;
+    border-radius: 0.5rem;
+}
+
+#opciones-inicio{
+    margin-top: 1.5rem;
+}
+
+button{
+    background-color: rgba(128, 128, 128, 0.2);
+    border: black solid 1px;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
 }

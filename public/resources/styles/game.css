@@ -11,10 +11,10 @@ header {
 }
 
 h1{
-    background-image: url(../../images/back_lugar.png);
+    background-image: url(../../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 50% 50%;
+    background-size: 40% 55%;
     padding: 6rem 1rem;
     text-align: center;
 }
