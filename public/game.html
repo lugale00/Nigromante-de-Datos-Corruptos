@@ -6,11 +6,9 @@
         <title>Nigromante de datos corruptos</title>
         <link rel="stylesheet" href="resources/styles/game.css">
         <link rel="stylesheet" href="resources/styles/web.css">
+        <script src="resources/scripts/wsinvocation_sesion.js" defer></script>
+        <script src="resources/scripts/wsinvocation_game.js" defer></script>
         <script src="resources/scripts/juego.js" defer></script>
-        <script src="resources/scripts/wsinvocation_game.js"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&display=swap" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
@@ -26,7 +24,7 @@
                     <img src="images/nigromante.png" alt="Personaje del jugador" id="jugador-img">
                 </div>
                 <div id="mision">
-                    <p>Invoca a un fantasma para derrotar al enemigo</p>
+                    <!-- Se carga dinámicamente -->
                 </div>
                 <div id="enemigos">
                     <div class="enemigo">  
@@ -35,18 +33,16 @@
                             <img src="images/corazon.png" alt="corazón del enemigo" class="vida-enemigo">
                             <img src="images/corazon.png" alt="corazón del enemigo" class="vida-enemigo">
                         </div>
-                        <img src="images/enemigo.png" alt="Personaje del enemigo" class="enemigo-img">
+                        <img src="images/enemigo_fantasma.png" alt="Personaje del enemigo" class="enemigo-img">
                     </div>
                 </div>
             </div>
-            <div id="historia">
-
-            </div>
+            <div id="historia"></div>
             <div id="sentencias">
                 <div id="tablas">
                     <p>Tablas disponibles:</p>
                     <ul id="tablas-lista">
-                        <li><button>Almas</button></li>
+                        <!-- Se carga dinámicamente -->
                     </ul>
                 </div>
                 <div id="escribir">
@@ -54,8 +50,17 @@
                     <button id="enviar"> Invocar </button>
                 </div>
             </div>
-            <div id="resultado-container">
-            </div>
+            <div id="feedback-container"></div>
+            <div id="resultado-container"></div>
         </main>
+
+        <!-- Modal de tabla -->
+        <div id="modal-overlay">
+            <div id="modal">
+                <button id="modal-cerrar">✕</button>
+                <h2 id="modal-titulo"></h2>
+                <ul id="modal-atributos"></ul>
+            </div>
+        </div>
     </body>
 </html>

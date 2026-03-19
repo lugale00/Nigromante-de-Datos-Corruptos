@@ -9,21 +9,24 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 8080;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: process.env.SESSION_SECRET || 'clave_secreta',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 24
+    }
 }));
 
 const game = require('./routes/game');
 app.use('/game', game);
-
-// ✅ eliminada la ruta /login duplicada que usaba db sin importar
 
 const pool = require('./routes/db');
 
