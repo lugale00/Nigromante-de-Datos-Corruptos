@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-    cargarUsuarioHeader();
+    cargarUsuarioHeader_menu();
     cargarMenu(); // ✅ carga el nivel en el botón continuar
 
     let continuar = document.getElementById('continuar');

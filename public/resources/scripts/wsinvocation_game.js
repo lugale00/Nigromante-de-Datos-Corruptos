@@ -211,6 +211,46 @@ function jugadorMuerto() {
     location.reload();
 }
 
+function getSoloConsulta(sentencia) {
+    if (bloqueado) return;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", `/game/consulta/${encodeURIComponent(sentencia)}`, true);
+    xhr.withCredentials = true;
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            document.getElementById('feedback-container').innerHTML = ''; // ✅ limpia el error anterior
+            let resultado = JSON.parse(xhr.responseText);
+            let contenedor = document.getElementById('resultado-container');
+            contenedor.innerHTML = '';
+
+            resultado.forEach((tupla, index) => {
+                let textarea = document.createElement('textarea');
+                textarea.classList.add('resultado');
+                textarea.readOnly = true;
+                textarea.placeholder = `Fila ${index + 1}`;
+
+                let texto = '';
+                for (let campo in tupla) {
+                    texto += `${campo}: ${tupla[campo]}\n`;
+                }
+                textarea.value = texto;
+                contenedor.appendChild(textarea);
+            });
+
+        } else if (xhr.readyState == 4 && xhr.status == 403) {
+            mostrarError('Aún no tienes nivel para esa invocación.');
+
+        } else if (xhr.readyState == 4 && xhr.status == 418) {
+            mostrarError('No puedes acceder a ese plano astral.');
+
+        } else if (xhr.readyState == 4 && xhr.status == 500) {
+            mostrarError('Error en la runa de invocación.');
+        }
+    };
+    xhr.send();
+}
+
 function siguienteMision() {
     document.querySelector('.enemigo').style.opacity = '1';
     document.querySelector('.enemigo').style.transition = '';
@@ -274,6 +314,5 @@ function setBloqueado(estado) {
     if (btnEnviar) {
         btnEnviar.disabled = estado;
         btnEnviar.style.opacity = estado ? '0.5' : '1';
-        btnEnviar.style.cursor = estado ? 'not-allowed' : 'pointer';
     }
 }

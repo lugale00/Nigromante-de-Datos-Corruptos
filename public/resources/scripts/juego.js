@@ -17,7 +17,26 @@ document.addEventListener('DOMContentLoaded', function() {
     let enviar = document.getElementById('enviar');
     enviar.addEventListener('click', function(event) {
         event.preventDefault();
-        let sentencia = document.getElementById('sentencia').value;
+        let sentencia = document.getElementById('sentencia').value.trim();
+
+        if (sentencia === '') {
+            mostrarError('Escribe una sentencia antes de invocar.');
+            return; // ✅ no enviamos nada si está vacío
+        }
+
         getConsulta(sentencia);
+    });
+
+    let consultar = document.getElementById('consultar');
+    consultar.addEventListener('click', function(event) {
+        event.preventDefault();
+        let sentencia = document.getElementById('sentencia').value.trim();
+
+        if (sentencia === '') {
+            mostrarError('Escribe una sentencia antes de consultar.');
+            return;
+        }
+
+        getSoloConsulta(sentencia); // ✅ función nueva que no comprueba la misión
     });
 });

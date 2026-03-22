@@ -67,12 +67,20 @@ li{
     margin-bottom: 1rem;
 }
 
-#escribir{
+#escribir {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 1rem;
+}
+
+#botones-escribir {
+    display: flex;
+    flex-direction: row; /* ✅ en fila */
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1rem;
 }
 
 #resultado-container{
@@ -218,7 +226,6 @@ li{
     font-size: 1.5rem;
     background: transparent;
     border: none;
-    cursor: pointer;
 }
 
 /* Misión */
