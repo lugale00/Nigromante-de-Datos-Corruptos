@@ -151,7 +151,7 @@ function mostrarExito(mensaje) {
     contenedor.innerHTML = '';
     let msg = document.createElement('textarea');
     msg.classList.add('resultado');
-    msg.style.color = '#00ff00';
+    msg.style.color = '#099709';
     msg.readOnly = true;
     msg.textContent = mensaje;
     contenedor.appendChild(msg);
@@ -219,7 +219,7 @@ function getSoloConsulta(sentencia) {
     xhr.withCredentials = true;
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            document.getElementById('feedback-container').innerHTML = ''; // ✅ limpia el error anterior
+            document.getElementById('feedback-container').innerHTML = ''; // limpia el error anterior
             let resultado = JSON.parse(xhr.responseText);
             let contenedor = document.getElementById('resultado-container');
             contenedor.innerHTML = '';
