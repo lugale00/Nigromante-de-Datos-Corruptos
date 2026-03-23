@@ -10,6 +10,8 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 8080;
 
+const pool = require('./routes/db'); // ✅ movido arriba antes de usarlo
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,8 +35,6 @@ app.use(session({
 const game = require('./routes/game');
 app.use('/game', game);
 
-const pool = require('./routes/db');
-
 app.listen(port, async () => {
     try {
         await pool.connect();
@@ -43,4 +43,4 @@ app.listen(port, async () => {
         console.error('Error al conectar a PostgreSQL:', err);
     }
     console.log(`Servidor corriendo en http://localhost:${port}`);
-});      
+});  
