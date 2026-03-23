@@ -21,7 +21,7 @@ app.use(session({
         secure: false,
         httpOnly: true,
         sameSite: 'lax',
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 24 //cookie válido por 1 día 
     }
 }));
 
@@ -38,4 +38,4 @@ app.listen(port, async () => {
         console.error('Error al conectar a PostgreSQL:', err);
     }
     console.log(`Servidor corriendo en http://localhost:${port}`);
-});
+});      
