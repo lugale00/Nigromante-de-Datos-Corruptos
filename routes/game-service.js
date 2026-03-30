@@ -28,7 +28,7 @@ game.prototype.getConsulta = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
+        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
     }
 
     const vistas = {
@@ -87,10 +87,10 @@ game.prototype.login = async function (req, res) {
         );
 
         const usuario = result.rows[0];
-        if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado' });
+        if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado' }); // 401 Unauthorized -> credenciales inválidas
 
         const valida = await bcrypt.compare(contrasena, usuario.contrasena);
-        if (!valida) return res.status(401).json({ error: 'Contraseña incorrecta' });
+        if (!valida) return res.status(401).json({ error: 'Contraseña incorrecta' }); // 401 Unauthorized -> credenciales inválidas
 
         req.session.nivelUsuario = usuario.nivel_actual;
         req.session.nombre = usuario.nombre;
@@ -105,7 +105,7 @@ game.prototype.login = async function (req, res) {
 
 game.prototype.getSesion = async function (req, res) {
     if (!req.session.nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
+        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
     }
     res.status(200).json({
         nombre: req.session.nombre,
@@ -135,7 +135,7 @@ game.prototype.getTablas = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
+        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
     }
 
     try {
@@ -154,7 +154,7 @@ game.prototype.getMision = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
+        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
     }
 
     try {
@@ -187,7 +187,7 @@ game.prototype.subirNivel = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
+        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
     }
 
     // ✅ En lugar de bloquear, avisamos que el juego está completado
@@ -259,7 +259,7 @@ game.prototype.nuevoJuego = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
+        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
     }
 
     try {

@@ -1,11 +1,11 @@
 body{
-    background-image: url(../../images/fondo_cementerio.png);
+    background-image: url(../images/fondo_cementerio.png);
     background-repeat: no-repeat;
     background-size: 100% 120%;
 }
 
 header {
-    background-image: url(../../images/back_titulo.png);
+    background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 50% 70%;
@@ -24,7 +24,7 @@ h1{
 }
 
 #tablas{
-    background-image: url(../../images/back_titulo.png);
+    background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 80%;
@@ -52,7 +52,7 @@ li{
 }
 
 #sentencia{
-    background-image: url(../../images/back_text.png);
+    background-image: url(../images/back_text.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
@@ -91,7 +91,7 @@ li{
 }
 
 .resultado{
-    background-image: url(../../images/back_text.png);
+    background-image: url(../images/back_text.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
@@ -137,7 +137,7 @@ li{
 }
 
 #mision p {
-    background-image: url(../../images/back_titulo.png);
+    background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
@@ -191,7 +191,7 @@ li{
 }
 
 #modal {
-    background-image: url(../../images/back_text.png);
+    background-image: url(../images/back_text.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
@@ -230,7 +230,7 @@ li{
 
 /* Misión */
 #mision p {
-    background-image: url(../../images/back_titulo.png);
+    background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
@@ -254,7 +254,7 @@ li{
 }
 
 #feedback-container textarea {
-    background-image: url(../../images/back_titulo.png);
+    background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;

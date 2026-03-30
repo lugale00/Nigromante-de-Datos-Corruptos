@@ -1,5 +1,5 @@
 body{
-    background-image: url(../../images/background.png);
+    background-image: url(../images/background.png);
     background-repeat: no-repeat;
     background-size: 100%;
 }
@@ -9,7 +9,7 @@ header {
 }
 
 h1{
-    background-image: url(../../images/back_titulo.png);
+    background-image: url(../images/back_titulo.png);
     background-size: 40% 100%;
     background-repeat: no-repeat;
     background-position: center;
@@ -18,7 +18,7 @@ h1{
 }
 
 #text_cont{
-    background-image: url(../../images/back_text.png);
+    background-image: url(../images/back_text.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 75% 100%;
@@ -28,7 +28,7 @@ h1{
 }
 
 #formulario{
-    background-image: url(../../images/back_text.png);
+    background-image: url(../images/back_text.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 30% 100%;

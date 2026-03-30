@@ -99,7 +99,7 @@ function cargarMenu() {
             btnContinuar.textContent = `Continuar: Nivel ${sesion.nivel}`;
 
             // ✅ Eliminamos el bloqueo, siempre se puede continuar
-        } else if (xhr.readyState == 4 && xhr.status == 401) {
+        } else if (xhr.readyState == 4 && xhr.status == 401) { // 401 Unauthorized -> no hay sesión activa
             document.location.href = 'inicio_sesion.html';
         }
     };

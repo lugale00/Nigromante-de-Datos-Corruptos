@@ -36,17 +36,17 @@ function getConsulta(sentencia) {
                 comprobarSolucion(resultado);
             }
 
-        } else if (xhr.readyState == 4 && xhr.status == 403) {
+        } else if (xhr.readyState == 4 && xhr.status == 403) { // 403 Forbidden -> nivel insuficiente
             setBloqueado(false); // ✅ desbloqueamos siempre en error
             mostrarError('Aún no tienes nivel para esa invocación.');
             reducirVidaJugador();
 
-        } else if (xhr.readyState == 4 && xhr.status == 418) {
+        } else if (xhr.readyState == 4 && xhr.status == 418) { // 418 I'm a teapot -> intento de acceder donde no debe
             setBloqueado(false); // ✅ desbloqueamos siempre en error
             mostrarError('No puedes acceder a ese plano astral.');
             reducirVidaJugador();
 
-        } else if (xhr.readyState == 4 && xhr.status == 500) {
+        } else if (xhr.readyState == 4 && xhr.status == 500) { // 500 Internal Server Error -> error en la consulta
             setBloqueado(false); // ✅ desbloqueamos siempre en error
             mostrarError('Error en la runa de invocación.');
             reducirVidaJugador();
@@ -238,13 +238,13 @@ function getSoloConsulta(sentencia) {
                 contenedor.appendChild(textarea);
             });
 
-        } else if (xhr.readyState == 4 && xhr.status == 403) {
+        } else if (xhr.readyState == 4 && xhr.status == 403) { // 403 Forbidden -> nivel insuficiente
             mostrarError('Aún no tienes nivel para esa invocación.');
 
-        } else if (xhr.readyState == 4 && xhr.status == 418) {
+        } else if (xhr.readyState == 4 && xhr.status == 418) { // 418 I'm a teapot -> intento de acceder donde no debe
             mostrarError('No puedes acceder a ese plano astral.');
 
-        } else if (xhr.readyState == 4 && xhr.status == 500) {
+        } else if (xhr.readyState == 4 && xhr.status == 500) { // 500 Internal Server Error -> error en la consulta
             mostrarError('Error en la runa de invocación.');
         }
     };

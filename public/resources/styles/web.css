@@ -19,11 +19,11 @@
 }
 
 html, html *, body, body * {
-    cursor: url('../../images/cursor.png') 16 16, auto;
+    cursor: url('../images/cursor.png') 16 16, auto;
 }
 
 button {
-    cursor: url('../../images/cursor_hover.png') 16 16, pointer;
+    cursor: url('../images/cursor_hover.png') 16 16, pointer;
 }
 
 h1{
