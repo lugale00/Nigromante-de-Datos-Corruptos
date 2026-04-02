@@ -4,6 +4,17 @@ let misionActual = null;
 // Variable de bloqueo global
 let bloqueado = false;
 
+// Array de enemigos para futuras animaciones o cambios de imagen
+const enemigosPorNivel = {
+    1: ['resources/images/enemies/enemigo_fantasma.png'], // fijo nivel 1
+    2: [
+        'resources/images/enemies/enemigo_araña.png',
+        'resources/images/enemies/enemigo_caballo.png',
+        'resources/images/enemies/enemigo_fantasma_lvl2.png'
+    ], // aleatorio nivel 2
+    3: ['resources/images/enemies/enemigo_rey.png'] // fijo nivel 3
+};
+
 function getConsulta(sentencia) {
     if (bloqueado) return; // ✅ ignoramos si está bloqueado
     setBloqueado(true);    // ✅ bloqueamos mientras se procesa
@@ -118,10 +129,12 @@ function subirNivel() {
 
             if (datos.nivelMaximo) {
                 mostrarExito('¡Has completado el juego! Eres el maestro nigromante.');
+                cambiarEnemigo(3); // ✅ rey en nivel máximo
                 return;
             }
 
             mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
+            cambiarEnemigo(datos.nuevoNivel); // ✅ enemigo del nuevo nivel
 
             let nivelEl = document.getElementById('usuario-nivel');
             if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
@@ -172,14 +185,15 @@ function animarEnemigo() {
 function reducirVidaEnemigo() {
     let corazones = document.querySelectorAll('.vida-enemigo');
     for (let i = corazones.length - 1; i >= 0; i--) {
-        if (!corazones[i].classList.contains('oculto')) {
-            corazones[i].classList.add('oculto');
+        if (!corazones[i].classList.contains('vacio')) {
+            corazones[i].src = 'resources/images/corazon_vacio.png'; // ✅ cambia la imagen
+            corazones[i].classList.add('vacio');
             break;
         }
     }
 
-    let visibles = document.querySelectorAll('.vida-enemigo:not(.oculto)');
-    if (visibles.length === 0) {
+    let llenos = document.querySelectorAll('.vida-enemigo:not(.vacio)');
+    if (llenos.length === 0) {
         setTimeout(() => enemigoMuerto(), 500);
     }
 }
@@ -254,10 +268,13 @@ function getSoloConsulta(sentencia) {
 function siguienteMision() {
     document.querySelector('.enemigo').style.opacity = '1';
     document.querySelector('.enemigo').style.transition = '';
-    document.querySelectorAll('.vida-enemigo').forEach(c => c.classList.remove('oculto'));
+    document.querySelectorAll('.vida-enemigo').forEach(c => {
+        c.src = 'resources/images/corazon.png'; // ✅ restauramos los corazones
+        c.classList.remove('vacio');
+    });
     document.getElementById('feedback-container').innerHTML = '';
     document.getElementById('resultado-container').innerHTML = '';
-    setBloqueado(false); // ✅ desbloqueamos al resetear
+    setBloqueado(false);
 }
 
 function getTablasDisponibles() {
@@ -315,4 +332,10 @@ function setBloqueado(estado) {
         btnEnviar.disabled = estado;
         btnEnviar.style.opacity = estado ? '0.5' : '1';
     }
+}
+
+function cambiarEnemigo(nivel) {
+    let lista = enemigosPorNivel[nivel];
+    let nuevaImg = lista[Math.floor(Math.random() * lista.length)];
+    document.querySelector('.enemigo-img').src = nuevaImg;
 }

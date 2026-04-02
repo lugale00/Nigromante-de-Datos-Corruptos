@@ -17,6 +17,16 @@ h1{
     text-align: center;
 }
 
+button{
+    background-color: rgba(128, 128, 128, 0.2);
+    border: black solid 1px;
+    border-radius: 0.5rem;
+}
+
+#botones-escribir button{
+    background-color: rgb(255, 196, 87);
+}
+
 #sentencias{
     display: flex;
     align-items: center;
@@ -121,6 +131,7 @@ li{
 
 #jugador-img{
     margin-top: -1rem;
+    height: 12rem;
 }
 
 #jugador-vida{
@@ -273,7 +284,3 @@ li{
     100% { transform: translateX(0);     opacity: 1; }
 }
 
-/* Corazón oculto */
-.vida-enemigo.oculto {
-    visibility: hidden;
-}

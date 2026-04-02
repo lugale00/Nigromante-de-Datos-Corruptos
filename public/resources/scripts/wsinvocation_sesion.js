@@ -46,7 +46,7 @@ function RegistrarUsuario(nombre, contrasena) {
 function cargarUsuarioHeader() {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/sesion", true);
-    xhr.withCredentials = true; // ✅
+    xhr.withCredentials = true;
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
@@ -60,6 +60,11 @@ function cargarUsuarioHeader() {
                 <span id="usuario-nivel">Nivel ${sesion.nivel}</span>
             `;
             header.appendChild(info);
+
+            // ✅ cambiamos el enemigo según el nivel al cargar la página
+            if (typeof cambiarEnemigo === 'function') {
+                cambiarEnemigo(sesion.nivel);
+            }
         }
     };
     xhr.send();
