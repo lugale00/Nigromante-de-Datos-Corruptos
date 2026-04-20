@@ -4,17 +4,9 @@
     font-style: normal;
 }
 
-.pixelify-sans-regular {
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+.tiny5-regular {
+    font-family: "Tiny5", sans-serif;
     font-weight: 400;
-    font-style: normal;
-}
-
-.pixelify-sans-bold {
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 700;
     font-style: normal;
 }
 
@@ -34,31 +26,27 @@ h1{
 }
 
 p{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
 }
 
 button{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 700;
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
 }
 
 strong{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Tiny5", sans-serif;
     font-weight: 700;
     font-style: normal;
 }
 
 footer{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1rem;
@@ -66,24 +54,21 @@ footer{
 }
 
 textarea{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
 }
 
 input{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
 }
 
 li{
-    font-family: "Pixelify Sans", sans-serif;
-    font-optical-sizing: auto;
+    font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
 }
@@ -100,12 +85,12 @@ li{
 }
 
 #usuario-nombre {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1.3rem;
     font-weight: 700;
 }
 
 #usuario-nivel {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1rem;
 }
