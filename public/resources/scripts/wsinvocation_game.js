@@ -220,9 +220,12 @@ function enemigoMuerto() {
     setTimeout(() => siguienteMision(), 1500);
 }
 
-function jugadorMuerto() {
-    alert('Has sido derrotado. Inténtalo de nuevo.');
-    location.reload();
+async function jugadorMuerto() {
+    alert('Has sido derrotado. El Rey Corrupto ha ganado esta batalla...');
+    const ok = await nuevoJuego(); // ✅ resetea el nivel a 1 en BD y sesión
+    if (ok) {
+        document.location.href = 'menu.html'; // ✅ vuelve al menú
+    }
 }
 
 function getSoloConsulta(sentencia) {
