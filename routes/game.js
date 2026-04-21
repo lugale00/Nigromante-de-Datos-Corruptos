@@ -18,5 +18,13 @@ router.post('/comprobar', gameService.comprobarSolucion);
 router.post('/subirNivel', gameService.subirNivel);
 router.post('/nuevoJuego', gameService.nuevoJuego);
 
+//Operaciones admin
+router.get('/admin/verificar', gameService.verificarAdmin);
+router.post('/admin/login', gameService.loginAdmin);
+router.get('/admin/stats/usuarios', gameService.statsUsuarios);
+router.get('/admin/stats/misiones', gameService.statsMisiones);
+router.get('/admin/stats/intentos', gameService.statsIntentos);
+router.post('/admin/promover', gameService.promoverUsuario);
+
 
 module.exports = router;

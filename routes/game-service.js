@@ -213,7 +213,6 @@ game.prototype.subirNivel = async function (req, res) {
 };
 
 game.prototype.comprobarSolucion = async function (req, res) {
-
     const nivelUsuario = req.session.nivelUsuario;
     if (!nivelUsuario) {
         return res.status(401).json({ error: 'No has iniciado sesión' });
@@ -232,8 +231,21 @@ game.prototype.comprobarSolucion = async function (req, res) {
         const resultadoEsperado = mision.respuesta;
         const resultadoJugadorNorm = normalizarResultado(resultadoJugador);
         const resultadoEsperadoNorm = normalizarResultado(resultadoEsperado);
-
         const correcto = JSON.stringify(resultadoJugadorNorm) === JSON.stringify(resultadoEsperadoNorm);
+
+        // ✅ Guardamos el intento
+        const usuarioResult = await db.query(
+            'SELECT id FROM public.usuarios WHERE nombre = $1',
+            [req.session.nombre]
+        );
+        const idUsuario = usuarioResult.rows[0]?.id;
+
+        if (idUsuario) {
+            await db.query(
+                'INSERT INTO public.intentos (id_usuario, id_mision, correcto) VALUES ($1, $2, $3)',
+                [idUsuario, idMision, correcto]
+            );
+        }
 
         res.status(200).json({ correcto });
 
@@ -274,6 +286,142 @@ game.prototype.nuevoJuego = async function (req, res) {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al reiniciar el juego' });
+    }
+};
+
+// Verificar si el usuario actual es admin
+game.prototype.verificarAdmin = async function (req, res) {
+    if (!req.session.nivelUsuario || req.session.rol !== 'admin') {
+        return res.status(401).json({ error: 'No autorizado' });
+    }
+    res.status(200).json({ nombre: req.session.nombre });
+};
+
+// Login admin (mismo sistema pero guardamos el rol en sesión)
+game.prototype.loginAdmin = async function (req, res) {
+    const { nombre, contrasena } = req.body;
+
+    try {
+        const result = await db.query(
+            'SELECT * FROM public.usuarios WHERE nombre = $1 AND rol = $2',
+            [nombre, 'admin']
+        );
+
+        const usuario = result.rows[0];
+        if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado o sin permisos' });
+
+        const valida = await bcrypt.compare(contrasena, usuario.contrasena);
+        if (!valida) return res.status(401).json({ error: 'Contraseña incorrecta' });
+
+        req.session.nivelUsuario = usuario.nivel_actual;
+        req.session.nombre = usuario.nombre;
+        req.session.rol = 'admin'; // ✅ guardamos el rol en sesión
+
+        res.status(200).json({ mensaje: 'Login correcto' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+};
+
+// Estadísticas de usuarios
+game.prototype.statsUsuarios = async function (req, res) {
+    if (req.session.rol !== 'admin') return res.status(401).json({ error: 'No autorizado' });
+
+    try {
+        const result = await db.query(`
+            SELECT
+                u.nombre,
+                u.nivel_actual,
+                u.nivel_maximo,
+                u.fecha_registro,
+                COUNT(i.id) AS total_intentos,
+                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
+                SUM(CASE WHEN NOT i.correcto THEN 1 ELSE 0 END) AS fallos
+            FROM public.usuarios u
+            LEFT JOIN public.intentos i ON i.id_usuario = u.id
+            WHERE u.rol = 'estudiante'
+            GROUP BY u.id
+            ORDER BY u.fecha_registro DESC
+        `);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+};
+
+// Estadísticas de misiones
+game.prototype.statsMisiones = async function (req, res) {
+    if (req.session.rol !== 'admin') return res.status(401).json({ error: 'No autorizado' });
+
+    try {
+        const result = await db.query(`
+            SELECT
+                m.nombre,
+                m.nivel_requerido,
+                COUNT(i.id) AS total_intentos,
+                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
+                SUM(CASE WHEN NOT i.correcto THEN 1 ELSE 0 END) AS fallos,
+                ROUND(
+                    SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(i.id), 0)
+                , 1) AS tasa_acierto
+            FROM public.misiones m
+            LEFT JOIN public.intentos i ON i.id_mision = m.id
+            GROUP BY m.id
+            ORDER BY m.nivel_requerido, m.id
+        `);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+};
+
+// Estadísticas de intentos por día
+game.prototype.statsIntentos = async function (req, res) {
+    if (req.session.rol !== 'admin') return res.status(401).json({ error: 'No autorizado' });
+
+    try {
+        const result = await db.query(`
+            SELECT
+                DATE(fecha) AS dia,
+                COUNT(*) AS total,
+                SUM(CASE WHEN correcto THEN 1 ELSE 0 END) AS aciertos
+            FROM public.intentos
+            GROUP BY DATE(fecha)
+            ORDER BY dia DESC
+            LIMIT 30
+        `);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener estadísticas' });
+    }
+};
+
+// Promover usuario a admin
+game.prototype.promoverUsuario = async function (req, res) {
+    if (req.session.rol !== 'admin') return res.status(401).json({ error: 'No autorizado' });
+
+    const { nombre } = req.body;
+
+    try {
+        const result = await db.query(
+            'UPDATE public.usuarios SET rol = $1 WHERE nombre = $2 AND rol = $3 RETURNING nombre',
+            ['admin', nombre, 'estudiante']
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado o ya es admin' });
+        }
+
+        res.status(200).json({ mensaje: `${nombre} ahora es administrador` });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al promover usuario' });
     }
 };
 
