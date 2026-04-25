@@ -1,0 +1,179 @@
+body {
+    background-image: url(../images/background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+header {
+    background-image: url(../images/back_titulo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50% 100%;
+    text-align: center;
+    padding: 1rem;
+    position: relative;
+}
+
+#admin-info {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+#admin-nombre {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: antiquewhite;
+}
+
+/* Cards resumen */
+#resumen-cards {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem auto;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-image: url(../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 2rem 3rem;
+    text-align: center;
+    min-width: 12rem;
+}
+
+.card-titulo {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-valor {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* Gráficas */
+#graficas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+}
+
+.grafica-container {
+    background-image: url(../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 2rem;
+    width: 45%;
+    min-width: 300px;
+    text-align: center;
+}
+
+.grafica-container h2 {
+    font-family: "Jacquard 12", system-ui;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+/* Tabla estudiantes */
+#tabla-estudiantes-container {
+    background-image: url(../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 2rem 3rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+    text-align: center;
+}
+
+#tabla-estudiantes-container h2 {
+    font-family: "Jacquard 12", system-ui;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+#tabla-estudiantes {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tabla-estudiantes th {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.5rem;
+    border-bottom: 2px solid rgba(0,0,0,0.3);
+}
+
+#tabla-estudiantes td {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+#tabla-estudiantes tr:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Login modal */
+#login-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-overlay.activo {
+    display: flex;
+}
+
+#login-modal {
+    background-image: url(../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 3rem 4rem;
+    text-align: center;
+    min-width: 20rem;
+}
+
+#login-modal h2 {
+    font-family: "Jacquard 12", system-ui;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+#login-modal input {
+    display: block;
+    margin: 0.5rem auto 1rem auto;
+    width: 80%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+#login-error {
+    color: #ff0015;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}

@@ -1,0 +1,260 @@
+document.addEventListener('DOMContentLoaded', function() {
+    verificarSesionAdmin();
+
+    document.getElementById('login-btn').addEventListener('click', hacerLogin);
+    document.getElementById('cerrar-sesion').addEventListener('click', cerrarSesion);
+});
+
+function verificarSesionAdmin() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/game/admin/verificar", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                let datos = JSON.parse(xhr.responseText);
+                document.getElementById('admin-nombre').textContent = '⚰ ' + datos.nombre;
+                document.getElementById('login-overlay').classList.remove('activo');
+                cargarDashboard();
+            }
+            // Si no hay sesión admin el modal de login permanece visible
+        }
+    };
+    xhr.send();
+}
+
+function hacerLogin() {
+    let nombre = document.getElementById('login-nombre').value.trim();
+    let contrasena = document.getElementById('login-contrasena').value.trim();
+
+    if (!nombre || !contrasena) {
+        document.getElementById('login-error').textContent = 'Rellena todos los campos.';
+        return;
+    }
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/admin/login", true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                verificarSesionAdmin();
+            } else {
+                document.getElementById('login-error').textContent = 'Credenciales incorrectas o sin permisos.';
+            }
+        }
+    };
+
+    xhr.send(JSON.stringify({ nombre, contrasena }));
+}
+
+function cerrarSesion() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/user/login", true); 
+    xhr.withCredentials = true;
+    location.reload();
+}
+
+function cargarDashboard() {
+    cargarStatsUsuarios();
+    cargarStatsMisiones();
+    cargarStatsActividad();
+}
+
+function cargarStatsUsuarios() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/game/admin/stats/usuarios", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let datos = JSON.parse(xhr.responseText);
+            renderizarTablaEstudiantes(datos);
+            renderizarGraficaNiveles(datos);
+            renderizarResumen(datos);
+        }
+    };
+    xhr.send();
+}
+
+function cargarStatsMisiones() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/game/admin/stats/misiones", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let datos = JSON.parse(xhr.responseText);
+            renderizarGraficaMisiones(datos);
+        }
+    };
+    xhr.send();
+}
+
+function cargarStatsActividad() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/game/admin/stats/intentos", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let datos = JSON.parse(xhr.responseText);
+            renderizarGraficaActividad(datos);
+        }
+    };
+    xhr.send();
+}
+
+function renderizarResumen(usuarios) {
+    let totalIntentos = usuarios.reduce((s, u) => s + parseInt(u.total_intentos || 0), 0);
+    let totalAciertos = usuarios.reduce((s, u) => s + parseInt(u.aciertos || 0), 0);
+    let tasaGlobal = totalIntentos > 0 ? Math.round(totalAciertos * 100 / totalIntentos) : 0;
+
+    document.getElementById('total-estudiantes').textContent = usuarios.length;
+    document.getElementById('total-intentos').textContent = totalIntentos;
+    document.getElementById('tasa-global').textContent = tasaGlobal + '%';
+}
+
+function renderizarTablaEstudiantes(usuarios) {
+    let tbody = document.getElementById('tabla-estudiantes-body');
+    tbody.innerHTML = '';
+
+    usuarios.forEach(u => {
+        let tasa = u.total_intentos > 0
+            ? Math.round(u.aciertos * 100 / u.total_intentos)
+            : 0;
+        let fecha = new Date(u.fecha_registro).toLocaleDateString('es-ES');
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${u.nombre}</td>
+            <td>${u.nivel_actual}</td>
+            <td>${u.nivel_maximo}</td>
+            <td>${u.total_intentos || 0}</td>
+            <td>${u.aciertos || 0}</td>
+            <td>${u.fallos || 0}</td>
+            <td>${tasa}%</td>
+            <td>${fecha}</td>
+            <td><button onclick="promoverUsuario('${u.nombre}')">Promover</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function promoverUsuario(nombre) {
+    if (!confirm(`¿Seguro que quieres hacer administrador a ${nombre}?`)) return;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/admin/promover", true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            alert(`${nombre} ahora es administrador.`);
+            cargarStatsUsuarios();
+        } else if (xhr.readyState == 4) {
+            alert('Error al promover usuario.');
+        }
+    };
+
+    xhr.send(JSON.stringify({ nombre }));
+}
+
+function renderizarGraficaNiveles(usuarios) {
+    let nivel1 = usuarios.filter(u => u.nivel_actual == 1).length;
+    let nivel2 = usuarios.filter(u => u.nivel_actual == 2).length;
+    let nivel3 = usuarios.filter(u => u.nivel_actual == 3).length;
+
+    new Chart(document.getElementById('grafica-niveles'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Nivel 1', 'Nivel 2', 'Nivel 3'],
+            datasets: [{
+                data: [nivel1, nivel2, nivel3],
+                backgroundColor: ['#6b3fa0', '#a05a2c', '#2c6ba0']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: { font: { family: 'Pixelify Sans', size: 14 } }
+                }
+            }
+        }
+    });
+}
+
+function renderizarGraficaMisiones(misiones) {
+    // Misión más difícil (menor tasa de acierto con al menos 1 intento)
+    let conIntentos = misiones.filter(m => m.total_intentos > 0);
+    if (conIntentos.length > 0) {
+        let dificil = conIntentos.reduce((min, m) =>
+            parseFloat(m.tasa_acierto) < parseFloat(min.tasa_acierto) ? m : min
+        );
+        document.getElementById('mision-dificil').textContent = dificil.nombre;
+    }
+
+    new Chart(document.getElementById('grafica-misiones'), {
+        type: 'bar',
+        data: {
+            labels: misiones.map(m => m.nombre),
+            datasets: [{
+                label: '% Acierto',
+                data: misiones.map(m => parseFloat(m.tasa_acierto) || 0),
+                backgroundColor: misiones.map(m =>
+                    m.nivel_requerido == 1 ? '#6b3fa0' :
+                    m.nivel_requerido == 2 ? '#a05a2c' : '#2c6ba0'
+                )
+            }]
+        },
+        options: {
+            scales: {
+                y: { min: 0, max: 100, ticks: { font: { family: 'Pixelify Sans' } } },
+                x: { ticks: { font: { family: 'Pixelify Sans' }, maxRotation: 45 } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+
+function renderizarGraficaActividad(dias) {
+    let labels = dias.map(d => new Date(d.dia).toLocaleDateString('es-ES')).reverse();
+    let totales = dias.map(d => parseInt(d.total)).reverse();
+    let aciertos = dias.map(d => parseInt(d.aciertos)).reverse();
+
+    new Chart(document.getElementById('grafica-actividad'), {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Intentos totales',
+                    data: totales,
+                    borderColor: '#6b3fa0',
+                    tension: 0.3,
+                    fill: false
+                },
+                {
+                    label: 'Aciertos',
+                    data: aciertos,
+                    borderColor: '#2c6ba0',
+                    tension: 0.3,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: { ticks: { font: { family: 'Pixelify Sans' }, maxRotation: 45 } },
+                y: { ticks: { font: { family: 'Pixelify Sans' } } }
+            },
+            plugins: {
+                legend: { labels: { font: { family: 'Pixelify Sans', size: 14 } } }
+            }
+        }
+    });
+}

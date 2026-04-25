@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard - Nigromante de Datos Corruptos</title>
+        <link rel="stylesheet" href="resources/styles/web.css">
+        <link rel="stylesheet" href="resources/styles/dashboard.css">
+        <link rel="icon" type="image/png" href="resources/images/favicon.png">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+        <script src="resources/scripts/dashboard.js" defer></script>
+    </head>
+    <body>
+        <header>
+            <h1>Panel del Maestro</h1>
+            <div id="admin-info">
+                <span id="admin-nombre"></span>
+                <button id="cerrar-sesion">Cerrar sesión</button>
+            </div>
+        </header>
+        <main>
+
+            <!-- Sección resumen -->
+            <div id="resumen-cards">
+                <div class="card">
+                    <p class="card-titulo">Estudiantes</p>
+                    <p class="card-valor" id="total-estudiantes">—</p>
+                </div>
+                <div class="card">
+                    <p class="card-titulo">Intentos totales</p>
+                    <p class="card-valor" id="total-intentos">—</p>
+                </div>
+                <div class="card">
+                    <p class="card-titulo">Tasa de acierto global</p>
+                    <p class="card-valor" id="tasa-global">—</p>
+                </div>
+                <div class="card">
+                    <p class="card-titulo">Misión más difícil</p>
+                    <p class="card-valor" id="mision-dificil">—</p>
+                </div>
+            </div>
+
+            <!-- Gráficas -->
+            <div id="graficas">
+                <div class="grafica-container">
+                    <h2>Distribución de estudiantes por nivel</h2>
+                    <canvas id="grafica-niveles"></canvas>
+                </div>
+                <div class="grafica-container">
+                    <h2>Tasa de acierto por misión</h2>
+                    <canvas id="grafica-misiones"></canvas>
+                </div>
+                <div class="grafica-container">
+                    <h2>Actividad diaria (últimos 30 días)</h2>
+                    <canvas id="grafica-actividad"></canvas>
+                </div>
+            </div>
+
+            <!-- Tabla de estudiantes -->
+            <div id="tabla-estudiantes-container">
+                <h2>Detalle por estudiante</h2>
+                <table id="tabla-estudiantes">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Nivel actual</th>
+                            <th>Nivel máximo</th>
+                            <th>Intentos</th>
+                            <th>Aciertos</th>
+                            <th>Fallos</th>
+                            <th>% Acierto</th>
+                            <th>Registro</th>
+                            <th>Promover</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-estudiantes-body"></tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <!-- Modal login -->
+        <div id="login-overlay" class="activo">
+            <div id="login-modal">
+                <h2>Acceso restringido</h2>
+                <p>Nombre de usuario:</p>
+                <input type="text" id="login-nombre" placeholder="Nombre de usuario">
+                <p>Contraseña:</p>
+                <input type="password" id="login-contrasena" placeholder="Contraseña">
+                <button id="login-btn">Entrar</button>
+                <p id="login-error"></p>
+            </div>
+        </div>
+    </body>
+</html>
