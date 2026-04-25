@@ -1,45 +1,47 @@
 
-function ComprobarUsuario(nombre, contrasena) {
+function ComprobarUsuario(email, contrasena) {
     return new Promise((resolve) => {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "/game/user/login", true);
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.withCredentials = true; // ✅ envía la cookie de sesión
+        xhr.withCredentials = true;
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
                     resolve(true);
                 } else {
-                    alert('Nombre de usuario o contraseña incorrectos.');
+                    let error = JSON.parse(xhr.responseText);
+                    alert(error.error || 'Error al iniciar sesión.');
                     resolve(false);
                 }
             }
         };
 
-        xhr.send(JSON.stringify({ nombre, contrasena }));
+        xhr.send(JSON.stringify({ email, contrasena }));
     });
 }
 
-function RegistrarUsuario(nombre, contrasena) {
+function RegistrarUsuario(nombre, email, contrasena) {
     return new Promise((resolve) => {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "/game/user/registrar", true);
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.withCredentials = true; // ✅
+        xhr.withCredentials = true;
 
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
                     resolve(true);
                 } else {
-                    alert('Error al registrarse. El usuario ya existe.');
+                    let error = JSON.parse(xhr.responseText);
+                    alert(error.error || 'Error al registrarse.');
                     resolve(false);
                 }
             }
         };
 
-        xhr.send(JSON.stringify({ nombre, contrasena }));
+        xhr.send(JSON.stringify({ nombre, email, contrasena }));
     });
 }
 

@@ -19,14 +19,18 @@
         </header>
         <main>
             <div id="formulario">
-                <p>Nombre de usuario:</p>
-                <input type="text" id="nombre" name="nombre" placeholder="Nombre de usuario">
+                <p>Correo electrónico:</p>
+                <input type="email" id="email" name="email" placeholder="correo@ejemplo.com">
                 <p>Contraseña:</p>
                 <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
                 <div id="opciones-inicio">
                     <button id="iniciar-sesion">Iniciar sesión</button>
                     <button id="registrarse">Registrarse</button>
                 </div>
+                <div id="separador"><p>— o —</p></div>
+                <button id="google-login" onclick="window.location.href='/game/auth/google'">
+                    Iniciar sesión con Google
+                </button>
             </div>
         </main>
     </body>

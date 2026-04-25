@@ -78,22 +78,28 @@ game.prototype.getConsulta = async function (req, res) {
 };
 
 game.prototype.login = async function (req, res) {
-    const { nombre, contrasena } = req.body;
+    const { email, contrasena } = req.body; // ✅ ahora usamos email
 
     try {
         const result = await db.query(
-            'SELECT * FROM public.usuarios WHERE nombre = $1',
-            [nombre]
+            'SELECT * FROM public.usuarios WHERE email = $1',
+            [email]
         );
 
         const usuario = result.rows[0];
-        if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado' }); // 401 Unauthorized -> credenciales inválidas
+        if (!usuario) return res.status(401).json({ error: 'Usuario no encontrado' });
+
+        // Bloqueamos login con contraseña si el usuario se registró con Google
+        if (usuario.contrasena === 'google_auth') {
+            return res.status(401).json({ error: 'Esta cuenta usa Google para iniciar sesión' });
+        }
 
         const valida = await bcrypt.compare(contrasena, usuario.contrasena);
-        if (!valida) return res.status(401).json({ error: 'Contraseña incorrecta' }); // 401 Unauthorized -> credenciales inválidas
+        if (!valida) return res.status(401).json({ error: 'Contraseña incorrecta' });
 
         req.session.nivelUsuario = usuario.nivel_actual;
         req.session.nombre = usuario.nombre;
+        req.session.rol = usuario.rol || 'estudiante';
 
         res.status(200).json({ mensaje: 'Login correcto' });
 
@@ -114,20 +120,29 @@ game.prototype.getSesion = async function (req, res) {
 };
 
 game.prototype.registrar = async function (req, res) {
-    const { nombre, contrasena } = req.body;
+    const { nombre, email, contrasena } = req.body; // ✅ añadimos email
 
     try {
+        // Comprobamos si el email ya existe
+        const existe = await db.query(
+            'SELECT id FROM public.usuarios WHERE email = $1',
+            [email]
+        );
+        if (existe.rows.length > 0) {
+            return res.status(400).json({ error: 'El email ya está registrado' });
+        }
+
         const hash = await bcrypt.hash(contrasena, 10);
         await db.query(
-            'INSERT INTO public.usuarios (nombre, contrasena, nivel_actual, nivel_maximo) VALUES ($1, $2, 1, 1)',
-            [nombre, hash]
+            'INSERT INTO public.usuarios (nombre, email, contrasena, nivel_actual, nivel_maximo) VALUES ($1, $2, $3, 1, 1)',
+            [nombre, email, hash]
         );
 
         res.status(200).json({ mensaje: 'Registro exitoso' });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'El usuario ya existe' });
+        res.status(500).json({ error: 'Error al registrar usuario' });
     }
 };
 
