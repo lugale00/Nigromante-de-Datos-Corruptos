@@ -102,11 +102,15 @@ function cargarMenu() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let sesion = JSON.parse(xhr.responseText);
             let btnContinuar = document.getElementById('continuar');
-
             btnContinuar.textContent = `Continuar: Nivel ${sesion.nivel}`;
 
-            // ✅ Eliminamos el bloqueo, siempre se puede continuar
-        } else if (xhr.readyState == 4 && xhr.status == 401) { // 401 Unauthorized -> no hay sesión activa
+            // ✅ Mostramos el botón de dashboard solo si es admin
+            if (sesion.rol === 'admin') {
+                let btnDashboard = document.getElementById('dashboard');
+                if (btnDashboard) btnDashboard.style.display = 'block';
+            }
+
+        } else if (xhr.readyState == 4 && xhr.status == 401) {
             document.location.href = 'inicio_sesion.html';
         }
     };

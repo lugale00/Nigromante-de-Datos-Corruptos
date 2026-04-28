@@ -18,12 +18,10 @@
             <h1>Panel del Maestro</h1>
             <div id="admin-info">
                 <span id="admin-nombre"></span>
-                <button id="cerrar-sesion">Cerrar sesión</button>
+                <button id="cerrar-sesion">← Volver al menú</button>
             </div>
         </header>
         <main>
-
-            <!-- Sección resumen -->
             <div id="resumen-cards">
                 <div class="card">
                     <p class="card-titulo">Estudiantes</p>
@@ -42,8 +40,6 @@
                     <p class="card-valor" id="mision-dificil">—</p>
                 </div>
             </div>
-
-            <!-- Gráficas -->
             <div id="graficas">
                 <div class="grafica-container">
                     <h2>Distribución de estudiantes por nivel</h2>
@@ -58,8 +54,6 @@
                     <canvas id="grafica-actividad"></canvas>
                 </div>
             </div>
-
-            <!-- Tabla de estudiantes -->
             <div id="tabla-estudiantes-container">
                 <h2>Detalle por estudiante</h2>
                 <table id="tabla-estudiantes">
@@ -79,20 +73,6 @@
                     <tbody id="tabla-estudiantes-body"></tbody>
                 </table>
             </div>
-
         </main>
-
-        <!-- Modal login -->
-        <div id="login-overlay" class="activo">
-            <div id="login-modal">
-                <h2>Acceso restringido</h2>
-                <p>Nombre de usuario:</p>
-                <input type="text" id="login-nombre" placeholder="Nombre de usuario">
-                <p>Contraseña:</p>
-                <input type="password" id="login-contrasena" placeholder="Contraseña">
-                <button id="login-btn">Entrar</button>
-                <p id="login-error"></p>
-            </div>
-        </div>
     </body>
 </html>

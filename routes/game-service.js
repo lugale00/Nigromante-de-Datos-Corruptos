@@ -111,11 +111,12 @@ game.prototype.login = async function (req, res) {
 
 game.prototype.getSesion = async function (req, res) {
     if (!req.session.nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
+        return res.status(401).json({ error: 'No has iniciado sesión' });
     }
     res.status(200).json({
         nombre: req.session.nombre,
-        nivel: req.session.nivelUsuario
+        nivel: req.session.nivelUsuario,
+        rol: req.session.rol || 'estudiante' // ✅ añadimos el rol
     });
 };
 

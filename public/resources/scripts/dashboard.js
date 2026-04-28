@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     verificarSesionAdmin();
-
-    document.getElementById('login-btn').addEventListener('click', hacerLogin);
     document.getElementById('cerrar-sesion').addEventListener('click', cerrarSesion);
 });
 
@@ -15,47 +13,18 @@ function verificarSesionAdmin() {
             if (xhr.status == 200) {
                 let datos = JSON.parse(xhr.responseText);
                 document.getElementById('admin-nombre').textContent = '⚰ ' + datos.nombre;
-                document.getElementById('login-overlay').classList.remove('activo');
                 cargarDashboard();
+            } else {
+                // No es admin, redirigimos al menú
+                document.location.href = 'menu.html';
             }
-            // Si no hay sesión admin el modal de login permanece visible
         }
     };
     xhr.send();
 }
 
-function hacerLogin() {
-    let nombre = document.getElementById('login-nombre').value.trim();
-    let contrasena = document.getElementById('login-contrasena').value.trim();
-
-    if (!nombre || !contrasena) {
-        document.getElementById('login-error').textContent = 'Rellena todos los campos.';
-        return;
-    }
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/game/admin/login", true);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-                verificarSesionAdmin();
-            } else {
-                document.getElementById('login-error').textContent = 'Credenciales incorrectas o sin permisos.';
-            }
-        }
-    };
-
-    xhr.send(JSON.stringify({ nombre, contrasena }));
-}
-
 function cerrarSesion() {
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/game/user/login", true); 
-    xhr.withCredentials = true;
-    location.reload();
+    document.location.href = 'menu.html';
 }
 
 function cargarDashboard() {

@@ -1,7 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     cargarUsuarioHeader_menu();
-    cargarMenu(); // ✅ carga el nivel en el botón continuar
+    cargarMenu();
 
     let continuar = document.getElementById('continuar');
     continuar.addEventListener('click', function() {
@@ -10,9 +10,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let nuevoJuegoBtn = document.getElementById('nuevo-juego');
     nuevoJuegoBtn.addEventListener('click', async function() {
-        const ok = await nuevoJuego(); // ✅ resetea el nivel a 1 en BD y sesión
+        const ok = await nuevoJuego();
         if (ok) {
             document.location.href = 'game.html';
         }
+    });
+
+    let dashboardBtn = document.getElementById('dashboard');
+    dashboardBtn.addEventListener('click', function() {
+        document.location.href = 'dashboard.html';
     });
 });
