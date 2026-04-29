@@ -4,6 +4,18 @@ let misionActual = null;
 // Variable de bloqueo global
 let bloqueado = false;
 
+const palabrasSQL = [
+    // Cláusulas principales
+    'SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN',
+    'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'DISTINCT',
+    'AS', 'ON', 'AND', 'OR', 'NOT', 'IN', 'BETWEEN', 'LIKE', 'IS NULL',
+    'IS NOT NULL', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN',
+    // Tablas del juego
+    'almas', 'lugar', 'armamento',
+    // Columnas del juego
+    'id', 'nombre', 'nivel', 'corrupcion', 'id_lugar', 'id_alma', 'tipo', 'aumento'
+];
+
 // Array de enemigos para futuras animaciones o cambios de imagen
 const enemigosPorNivel = {
     1: ['resources/images/enemies/enemigo_fantasma.png'], // fijo nivel 1
@@ -341,4 +353,79 @@ function cambiarEnemigo(nivel) {
     let lista = enemigosPorNivel[nivel];
     let nuevaImg = lista[Math.floor(Math.random() * lista.length)];
     document.querySelector('.enemigo-img').src = nuevaImg;
+}
+
+function iniciarAutocompletado() {
+    const textarea = document.getElementById('sentencia');
+    const sugerencias = document.createElement('div');
+    sugerencias.id = 'autocompletado';
+    document.body.appendChild(sugerencias);
+
+    textarea.addEventListener('input', function() {
+        const texto = textarea.value;
+        const posicion = textarea.selectionStart;
+
+        // Obtenemos la palabra actual que se está escribiendo
+        const textoHastaCursor = texto.substring(0, posicion);
+        const palabraActual = textoHastaCursor.split(/[\s,()]+/).pop();
+
+        if (palabraActual.length < 2) {
+            sugerencias.style.display = 'none';
+            return;
+        }
+
+        // Filtramos las palabras que coinciden
+        const coincidencias = palabrasSQL.filter(p =>
+            p.toLowerCase().startsWith(palabraActual.toLowerCase()) &&
+            p.toLowerCase() !== palabraActual.toLowerCase()
+        );
+
+        if (coincidencias.length === 0) {
+            sugerencias.style.display = 'none';
+            return;
+        }
+
+        // Posicionamos el cuadro cerca del textarea
+        const rect = textarea.getBoundingClientRect();
+        sugerencias.style.left = rect.left + 'px';
+        sugerencias.style.top = (rect.bottom + window.scrollY + 4) + 'px';
+        sugerencias.style.display = 'block';
+        sugerencias.innerHTML = '';
+
+        coincidencias.slice(0, 6).forEach(palabra => {
+            let item = document.createElement('div');
+            item.classList.add('sugerencia-item');
+            item.textContent = palabra;
+
+            item.addEventListener('mousedown', function(e) {
+                e.preventDefault(); // evita que el textarea pierda el foco
+
+                // Sustituimos la palabra actual por la sugerencia
+                const inicio = textoHastaCursor.lastIndexOf(palabraActual);
+                const nuevaConsulta = texto.substring(0, inicio) + palabra + texto.substring(posicion);
+                textarea.value = nuevaConsulta;
+
+                // Movemos el cursor al final de la palabra insertada
+                const nuevaPosicion = inicio + palabra.length;
+                textarea.setSelectionRange(nuevaPosicion, nuevaPosicion);
+                textarea.focus();
+
+                sugerencias.style.display = 'none';
+            });
+
+            sugerencias.appendChild(item);
+        });
+    });
+
+    // Ocultamos al perder el foco
+    textarea.addEventListener('blur', function() {
+        setTimeout(() => sugerencias.style.display = 'none', 150);
+    });
+
+    // Ocultamos al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (e.target !== textarea) {
+            sugerencias.style.display = 'none';
+        }
+    });
 }

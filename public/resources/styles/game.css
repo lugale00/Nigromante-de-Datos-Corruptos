@@ -77,6 +77,31 @@ li{
     margin-bottom: 1rem;
 }
 
+#autocompletado {
+    position: absolute;
+    display: none;
+    background-color: rgba(20, 10, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    z-index: 200;
+    min-width: 150px;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.sugerencia-item {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    color: antiquewhite;
+    cursor: pointer;
+}
+
+.sugerencia-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+}
+
 #escribir {
     display: flex;
     flex-direction: column;

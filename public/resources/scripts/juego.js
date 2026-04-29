@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarUsuarioHeader();
     getTablasDisponibles();
     getMisionActual();
+    iniciarAutocompletado();
 
     document.getElementById('modal-cerrar').addEventListener('click', function() {
         document.getElementById('modal-overlay').classList.remove('activo');
