@@ -52,3 +52,10 @@ button{
     border-radius: 0.5rem;
     font-size: 1.5rem;
 }
+
+#error-registro {
+    color: #ff0015;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}

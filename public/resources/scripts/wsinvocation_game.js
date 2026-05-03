@@ -9,7 +9,7 @@ const palabrasSQL = [
     'SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN',
     'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'DISTINCT',
     'AS', 'ON', 'AND', 'OR', 'NOT', 'IN', 'BETWEEN', 'LIKE', 'IS NULL',
-    'IS NOT NULL', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN',
+    'IS NOT NULL', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN','ASC','DESC',
     // Tablas del juego
     'almas', 'lugar', 'armamento',
     // Columnas del juego
