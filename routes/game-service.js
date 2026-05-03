@@ -345,22 +345,54 @@ game.prototype.loginAdmin = async function (req, res) {
 game.prototype.statsUsuarios = async function (req, res) {
     if (req.session.rol !== 'admin') return res.status(401).json({ error: 'No autorizado' });
 
+    const busqueda = req.query.busqueda || '';
+
     try {
-        const result = await db.query(`
-            SELECT
-                u.nombre,
-                u.nivel_actual,
-                u.nivel_maximo,
-                u.fecha_registro,
-                COUNT(i.id) AS total_intentos,
-                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
-                SUM(CASE WHEN NOT i.correcto THEN 1 ELSE 0 END) AS fallos
-            FROM public.usuarios u
-            LEFT JOIN public.intentos i ON i.id_usuario = u.id
-            WHERE u.rol = 'estudiante'
-            GROUP BY u.id
-            ORDER BY u.fecha_registro DESC
-        `);
+        let query;
+        let params;
+
+        if (busqueda) {
+            query = `
+                SELECT
+                    u.nombre,
+                    u.email,
+                    u.nivel_actual,
+                    u.nivel_maximo,
+                    u.fecha_registro,
+                    COUNT(i.id) AS total_intentos,
+                    SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
+                    SUM(CASE WHEN NOT i.correcto THEN 1 ELSE 0 END) AS fallos
+                FROM public.usuarios u
+                LEFT JOIN public.intentos i ON i.id_usuario = u.id
+                WHERE u.rol = 'estudiante'
+                AND (u.nombre ILIKE $1 OR u.email ILIKE $1)
+                GROUP BY u.id
+                ORDER BY u.fecha_registro DESC
+                LIMIT 10
+            `;
+            params = [`%${busqueda}%`];
+        } else {
+            query = `
+                SELECT
+                    u.nombre,
+                    u.email,
+                    u.nivel_actual,
+                    u.nivel_maximo,
+                    u.fecha_registro,
+                    COUNT(i.id) AS total_intentos,
+                    SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
+                    SUM(CASE WHEN NOT i.correcto THEN 1 ELSE 0 END) AS fallos
+                FROM public.usuarios u
+                LEFT JOIN public.intentos i ON i.id_usuario = u.id
+                WHERE u.rol = 'estudiante'
+                GROUP BY u.id
+                ORDER BY u.fecha_registro DESC
+                LIMIT 10
+            `;
+            params = [];
+        }
+
+        const result = await db.query(query, params);
         res.status(200).json(result.rows);
     } catch (error) {
         console.error(error);

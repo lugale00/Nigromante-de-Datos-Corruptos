@@ -31,19 +31,43 @@ function cargarDashboard() {
     cargarStatsUsuarios();
     cargarStatsMisiones();
     cargarStatsActividad();
+
+    // ✅ Listeners de búsqueda
+    document.getElementById('btn-buscar').addEventListener('click', function() {
+        let busqueda = document.getElementById('busqueda').value.trim();
+        cargarStatsUsuarios(busqueda);
+    });
+
+    document.getElementById('btn-limpiar').addEventListener('click', function() {
+        document.getElementById('busqueda').value = '';
+        cargarStatsUsuarios();
+    });
+
+    // ✅ Buscar al pulsar Enter
+    document.getElementById('busqueda').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            let busqueda = document.getElementById('busqueda').value.trim();
+            cargarStatsUsuarios(busqueda);
+        }
+    });
 }
 
-function cargarStatsUsuarios() {
+function cargarStatsUsuarios(busqueda = '') {
     let xhr = new XMLHttpRequest();
-    xhr.open("GET", "/game/admin/stats/usuarios", true);
+    let url = '/game/admin/stats/usuarios';
+    if (busqueda) url += `?busqueda=${encodeURIComponent(busqueda)}`;
+
+    xhr.open("GET", url, true);
     xhr.withCredentials = true;
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let datos = JSON.parse(xhr.responseText);
-            renderizarTablaEstudiantes(datos);
-            renderizarGraficaNiveles(datos);
-            renderizarResumen(datos);
+            renderizarTablaEstudiantes(datos, busqueda);
+            if (!busqueda) {
+                renderizarGraficaNiveles(datos);
+                renderizarResumen(datos);
+            }
         }
     };
     xhr.send();
@@ -77,14 +101,42 @@ function cargarStatsActividad() {
     xhr.send();
 }
 
-function renderizarResumen(usuarios) {
-    let totalIntentos = usuarios.reduce((s, u) => s + parseInt(u.total_intentos || 0), 0);
-    let totalAciertos = usuarios.reduce((s, u) => s + parseInt(u.aciertos || 0), 0);
-    let tasaGlobal = totalIntentos > 0 ? Math.round(totalAciertos * 100 / totalIntentos) : 0;
+function renderizarTablaEstudiantes(usuarios, busqueda = '') {
+    let tbody = document.getElementById('tabla-estudiantes-body');
+    let info = document.getElementById('tabla-info');
+    tbody.innerHTML = '';
 
-    document.getElementById('total-estudiantes').textContent = usuarios.length;
-    document.getElementById('total-intentos').textContent = totalIntentos;
-    document.getElementById('tasa-global').textContent = tasaGlobal + '%';
+    if (usuarios.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10">No se encontraron estudiantes.</td></tr>';
+        info.textContent = 'Sin resultados';
+        return;
+    }
+
+    usuarios.forEach(u => {
+        let tasa = u.total_intentos > 0
+            ? Math.round(u.aciertos * 100 / u.total_intentos)
+            : 0;
+        let fecha = new Date(u.fecha_registro).toLocaleDateString('es-ES');
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${u.nombre}</td>
+            <td>${u.email || '—'}</td>
+            <td>${u.nivel_actual}</td>
+            <td>${u.nivel_maximo}</td>
+            <td>${u.total_intentos || 0}</td>
+            <td>${u.aciertos || 0}</td>
+            <td>${u.fallos || 0}</td>
+            <td>${tasa}%</td>
+            <td>${fecha}</td>
+            <td><button onclick="promoverUsuario('${u.nombre}')">Promover</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    info.textContent = busqueda
+        ? `${usuarios.length} resultado(s) para "${busqueda}"`
+        : `Mostrando los ${usuarios.length} últimos registros`;
 }
 
 function renderizarTablaEstudiantes(usuarios) {

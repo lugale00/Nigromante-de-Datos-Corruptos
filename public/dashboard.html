@@ -10,7 +10,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Tiny5&display=swap" rel="stylesheet">
         <script src="resources/scripts/dashboard.js" defer></script>
     </head>
     <body>
@@ -56,10 +56,16 @@
             </div>
             <div id="tabla-estudiantes-container">
                 <h2>Detalle por estudiante</h2>
+                <div id="busqueda-container">
+                    <input type="text" id="busqueda" placeholder="Buscar por nombre o correo...">
+                    <button id="btn-buscar">Buscar</button>
+                    <button id="btn-limpiar">Limpiar</button>
+                </div>
                 <table id="tabla-estudiantes">
                     <thead>
                         <tr>
                             <th>Nombre</th>
+                            <th>Email</th>
                             <th>Nivel actual</th>
                             <th>Nivel máximo</th>
                             <th>Intentos</th>
@@ -72,6 +78,7 @@
                     </thead>
                     <tbody id="tabla-estudiantes-body"></tbody>
                 </table>
+                <p id="tabla-info">Mostrando los 10 últimos registros</p>
             </div>
         </main>
     </body>

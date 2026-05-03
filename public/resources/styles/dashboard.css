@@ -177,3 +177,29 @@ header {
     font-size: 1rem;
     margin-top: 0.5rem;
 }
+
+#busqueda-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+#busqueda {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0,0,0,0.3);
+    background-color: rgba(255,255,255,0.8);
+    width: 300px;
+}
+
+#tabla-info {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+    opacity: 0.7;
+}
