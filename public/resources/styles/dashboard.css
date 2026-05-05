@@ -63,12 +63,12 @@ header {
 
 /* Gráficas */
 #graficas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
     margin: 2rem auto;
     max-width: 1200px;
+    padding: 0 2rem;
 }
 
 .grafica-container {
@@ -77,8 +77,6 @@ header {
     background-position: center;
     background-size: 100% 100%;
     padding: 2rem;
-    width: 45%;
-    min-width: 300px;
     text-align: center;
 }
 
@@ -86,6 +84,10 @@ header {
     font-family: "Jacquard 12", system-ui;
     font-size: 1.8rem;
     margin-bottom: 1rem;
+}
+
+.grafica-container:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
 }
 
 /* Tabla estudiantes */
