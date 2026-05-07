@@ -417,6 +417,8 @@ game.prototype.statsMisiones = async function (req, res) {
                 , 1) AS tasa_acierto
             FROM public.misiones m
             LEFT JOIN public.intentos i ON i.id_mision = m.id
+            LEFT JOIN public.usuarios u ON i.id_usuario = u.id
+            WHERE u.rol = 'estudiante' OR u.rol IS NULL
             GROUP BY m.id
             ORDER BY m.nivel_requerido, m.id
         `);
@@ -434,11 +436,13 @@ game.prototype.statsIntentos = async function (req, res) {
     try {
         const result = await db.query(`
             SELECT
-                DATE(fecha) AS dia,
+                DATE(i.fecha) AS dia,
                 COUNT(*) AS total,
-                SUM(CASE WHEN correcto THEN 1 ELSE 0 END) AS aciertos
-            FROM public.intentos
-            GROUP BY DATE(fecha)
+                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos
+            FROM public.intentos i
+            JOIN public.usuarios u ON i.id_usuario = u.id
+            WHERE u.rol = 'estudiante'
+            GROUP BY DATE(i.fecha)
             ORDER BY dia DESC
             LIMIT 30
         `);
