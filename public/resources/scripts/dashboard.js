@@ -151,9 +151,10 @@ function renderizarTablaEstudiantes(usuarios) {
 
         let tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${u.nombre}</td>
-            <td>${u.nivel_actual}</td>
-            <td>${u.nivel_maximo}</td>
+            <td>${u.nombre || '—'}</td>
+            <td>${u.email || '—'}</td>       
+            <td>${u.nivel_actual || 1}</td>
+            <td>${u.nivel_maximo || 1}</td>
             <td>${u.total_intentos || 0}</td>
             <td>${u.aciertos || 0}</td>
             <td>${u.fallos || 0}</td>
