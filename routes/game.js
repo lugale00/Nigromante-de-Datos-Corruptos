@@ -10,6 +10,8 @@ router.get('/consulta/:consulta', gameService.getConsulta);
 router.get('/tablas', gameService.getTablas);
 router.get('/mision', gameService.getMision);
 router.get('/sesion', gameService.getSesion);
+router.get('/tutorial/dialogos', gameService.getDialogos);
+router.get('/tutorial/estado', gameService.getEstadoTutorial);
 
 //Operaciones POST
 router.post('/user/login', gameService.login);
@@ -17,6 +19,7 @@ router.post('/user/registrar', gameService.registrar);
 router.post('/comprobar', gameService.comprobarSolucion);
 router.post('/subirNivel', gameService.subirNivel);
 router.post('/nuevoJuego', gameService.nuevoJuego);
+router.post('/tutorial/avanzar', gameService.avanzarTutorial);
 
 //Operaciones admin
 router.get('/admin/verificar', gameService.verificarAdmin);

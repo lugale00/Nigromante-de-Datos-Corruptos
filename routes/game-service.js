@@ -33,8 +33,10 @@ game.prototype.getConsulta = async function (req, res) {
 
     const vistas = {
         1: { 'almas': 'datos.v_almas_n1' },
-        2: { 'almas': 'datos.v_almas_n2', 'lugar': 'datos.v_lugar_n2' },
-        3: { 'almas': 'datos.v_almas_n3', 'lugar': 'datos.v_lugar_n3', 'armamento': 'datos.v_armamento_n3' }
+        2: { 'almas': 'datos.v_almas_n1' },
+        3: { 'almas': 'datos.v_almas_n2', 'lugar': 'datos.v_lugar_n2' },
+        4: { 'almas': 'datos.v_almas_n2', 'lugar': 'datos.v_lugar_n2' },
+        5: { 'almas': 'datos.v_almas_n3', 'lugar': 'datos.v_lugar_n3', 'armamento': 'datos.v_armamento_n3' }
     };
 
     const vistasNivel = vistas[nivelUsuario];
@@ -203,11 +205,10 @@ game.prototype.subirNivel = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
+        return res.status(401).json({ error: 'No has iniciado sesión' });
     }
 
-    // ✅ En lugar de bloquear, avisamos que el juego está completado
-    if (nivelUsuario >= 3) {
+    if (nivelUsuario >= 5) {
         return res.status(200).json({ nivelMaximo: true });
     }
 
@@ -220,6 +221,8 @@ game.prototype.subirNivel = async function (req, res) {
         );
 
         req.session.nivelUsuario = nuevoNivel;
+        req.session.dialogoActual = 0; // ✅ reseteamos el progreso del tutorial
+
         res.status(200).json({ nuevoNivel });
 
     } catch (error) {
@@ -475,6 +478,54 @@ game.prototype.promoverUsuario = async function (req, res) {
         console.error(error);
         res.status(500).json({ error: 'Error al promover usuario' });
     }
+};
+
+// Devuelve los diálogos del nivel tutorial actual
+game.prototype.getDialogos = async function (req, res) {
+    const nivelUsuario = req.session.nivelUsuario;
+
+    if (!nivelUsuario) {
+        return res.status(401).json({ error: 'No has iniciado sesión' });
+    }
+
+    // Solo aplica en niveles de tutorial (1 y 3)
+    if (nivelUsuario !== 1 && nivelUsuario !== 3) {
+        return res.status(400).json({ error: 'No estás en un nivel de tutorial' });
+    }
+
+    try {
+        const result = await db.query(
+            'SELECT * FROM public.dialogos WHERE nivel = $1 ORDER BY orden',
+            [nivelUsuario]
+        );
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener diálogos' });
+    }
+};
+
+// Devuelve el estado del tutorial (en qué diálogo va el usuario)
+game.prototype.getEstadoTutorial = async function (req, res) {
+    if (!req.session.nivelUsuario) {
+        return res.status(401).json({ error: 'No has iniciado sesión' });
+    }
+
+    // Guardamos el progreso del tutorial en la sesión
+    const dialogoActual = req.session.dialogoActual || 0;
+    res.status(200).json({ dialogoActual });
+};
+
+// Avanza al siguiente diálogo
+game.prototype.avanzarTutorial = async function (req, res) {
+    if (!req.session.nivelUsuario) {
+        return res.status(401).json({ error: 'No has iniciado sesión' });
+    }
+
+    const { dialogoActual } = req.body;
+    req.session.dialogoActual = dialogoActual;
+
+    res.status(200).json({ ok: true });
 };
 
 module.exports = new game();
