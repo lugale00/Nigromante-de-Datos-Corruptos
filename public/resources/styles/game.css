@@ -309,3 +309,90 @@ li{
     100% { transform: translateX(0);     opacity: 1; }
 }
 
+/* Tutorial overlay */
+#tutorial-overlay {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    justify-content: center;
+    padding-bottom: 1rem;
+}
+
+#tutorial-overlay.activo {
+    display: flex;
+}
+
+#tutorial-panel {
+    background-image: url(../../images/back_text.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    padding: 1.5rem 2rem;
+    width: 80%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#tutorial-fantasmas {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+
+.fantasma-tutorial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+}
+
+.fantasma-tutorial.activo {
+    opacity: 1;
+}
+
+.fantasma-tutorial img {
+    width: 5rem;
+}
+
+.fantasma-nombre {
+    font-family: "Jacquard 12", system-ui;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+#tutorial-dialogo {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    min-height: 4rem;
+}
+
+#tutorial-fantasma-nombre {
+    font-family: "Jacquard 12", system-ui;
+    font-size: 1.8rem;
+    margin: 0 0 0.3rem 0;
+    color: antiquewhite;
+}
+
+#tutorial-mensaje {
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1.2rem;
+    margin: 0;
+    color: antiquewhite;
+}
+
+#tutorial-botones {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Ejercicio en tutorial */
+#tutorial-overlay.ejercicio #tutorial-botones {
+    justify-content: space-between;
+}
