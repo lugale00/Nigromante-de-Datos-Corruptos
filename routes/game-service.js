@@ -172,7 +172,12 @@ game.prototype.getMision = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
 
     if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' }); // 401 Unauthorized -> no hay sesión activa
+        return res.status(401).json({ error: 'No has iniciado sesión' });
+    }
+
+    // Si es nivel de tutorial, no hay misiones sino diálogos
+    if (nivelUsuario === 1 || nivelUsuario === 3) {
+        return res.status(200).json({ esTutorial: true, nivel: nivelUsuario });
     }
 
     try {

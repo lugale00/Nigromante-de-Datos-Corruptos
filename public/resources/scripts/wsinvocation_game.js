@@ -116,6 +116,12 @@ function getMisionActual(idMisionActual = null) {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let datos = JSON.parse(xhr.responseText);
 
+            if (datos.esTutorial) {
+                // ✅ Es un nivel de tutorial, iniciamos los diálogos
+                iniciarTutorial();
+                return;
+            }
+
             if (datos.subirNivel) {
                 subirNivel();
                 return;
