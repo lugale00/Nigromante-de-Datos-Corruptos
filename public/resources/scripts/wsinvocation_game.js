@@ -296,10 +296,21 @@ function getSoloConsulta(sentencia) {
 }
 
 function siguienteMision() {
+    let nivelEl = document.getElementById('usuario-nivel');
+    let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
+
+    // En tutorial no reaparece el enemigo
+    if (nivelActual === 1 || nivelActual === 3) {
+        document.getElementById('feedback-container').innerHTML = '';
+        document.getElementById('resultado-container').innerHTML = '';
+        setBloqueado(false);
+        return;
+    }
+
     document.querySelector('.enemigo').style.opacity = '1';
     document.querySelector('.enemigo').style.transition = '';
     document.querySelectorAll('.vida-enemigo').forEach(c => {
-        c.src = 'resources/images/corazon.png'; // ✅ restauramos los corazones
+        c.src = 'resources/images/corazon.png';
         c.classList.remove('vacio');
     });
     document.getElementById('feedback-container').innerHTML = '';
@@ -538,4 +549,20 @@ function finalizarTutorial() {
     document.getElementById('tutorial-overlay').classList.remove('activo');
     setBloqueado(false);
     subirNivel();
+}
+
+function configurarEnemigo(nivel) {
+    let contenedor = document.getElementById('enemigo-vida');
+    contenedor.innerHTML = '';
+
+    // Niveles de tutorial: 1 corazón, niveles normales: 3 corazones
+    let numCorazones = (nivel === 1 || nivel === 3) ? 1 : 3;
+
+    for (let i = 0; i < numCorazones; i++) {
+        let img = document.createElement('img');
+        img.src = 'resources/images/corazon.png';
+        img.alt = 'corazón del enemigo';
+        img.classList.add('vida-enemigo');
+        contenedor.appendChild(img);
+    }
 }

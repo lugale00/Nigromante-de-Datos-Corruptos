@@ -63,10 +63,8 @@ function cargarUsuarioHeader() {
             `;
             header.appendChild(info);
 
-            // ✅ cambiamos el enemigo según el nivel al cargar la página
-            if (typeof cambiarEnemigo === 'function') {
-                cambiarEnemigo(sesion.nivel);
-            }
+            cambiarEnemigo(sesion.nivel);
+            configurarEnemigo(sesion.nivel); // ✅ configuramos los corazones
         }
     };
     xhr.send();
