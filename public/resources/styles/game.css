@@ -326,7 +326,7 @@ li{
     background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 100% 100%;
+    background-size: 100% 110%;
     padding: 1rem 2rem;
     width: 50%;
     display: flex;
@@ -336,7 +336,7 @@ li{
 
 #tutorial-fantasmas {
     display: flex;
-    justify-content: space-around;
+    /*justify-content: space-around;*/
     align-items: flex-end;
 }
 
