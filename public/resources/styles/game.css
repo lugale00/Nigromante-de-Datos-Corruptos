@@ -326,7 +326,7 @@ li{
     background-image: url(../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 50% 100%;
+    background-size: 100% 100%;
     padding: 1rem 2rem;
     width: 50%;
     display: flex;
