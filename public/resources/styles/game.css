@@ -313,7 +313,7 @@ li{
 #tutorial-overlay {
     display: none;
     position: static; /* ✅ quitamos el fixed */
-    width: 100%;
+    width: 50%;
     justify-content: center;
     padding: 0;
 }
@@ -326,8 +326,8 @@ li{
     background-image: url(../../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 100% 100%;
-    padding: 1.5rem 2rem;
+    background-size: 50% 100%;
+    padding: 1rem 2rem;
     width: 50%;
     display: flex;
     flex-direction: column;
