@@ -53,6 +53,7 @@ function cargarUsuarioHeader() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let sesion = JSON.parse(xhr.responseText);
+            console.log('Nivel de sesión:', sesion.nivel); // ← log temporal
             let header = document.querySelector('header');
 
             let info = document.createElement('div');
