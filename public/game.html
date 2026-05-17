@@ -24,8 +24,39 @@
                     <p id="jugador-vida">Vida: 100</p>
                     <img src="resources/images/nigromante.png" alt="Personaje del jugador" id="jugador-img">
                 </div>
+
+                <!-- Panel de tutorial -->
+                <div id="tutorial-overlay">
+                    <div id="tutorial-panel">
+                        <div id="tutorial-fantasmas">
+                            <div class="fantasma-tutorial" id="fantasma-Mortis">
+                                <img src="resources/images/fantasmas/fantasma_amarillo.png" alt="Mortis">
+                                <p class="fantasma-nombre">Mortis</p>
+                            </div>
+                            <div class="fantasma-tutorial" id="fantasma-Lira">
+                                <img src="resources/images/fantasmas/fantasma_rosa.png" alt="Lira">
+                                <p class="fantasma-nombre">Lira</p>
+                            </div>
+                            <div class="fantasma-tutorial" id="fantasma-Grimm">
+                                <img src="resources/images/fantasmas/fantasma_verde.png" alt="Grimm">
+                                <p class="fantasma-nombre">Grimm</p>
+                            </div>
+                            <div class="fantasma-tutorial" id="fantasma-Pip">
+                                <img src="resources/images/fantasmas/fantasma_azul.png" alt="Pip">
+                                <p class="fantasma-nombre">Pip</p>
+                            </div>
+                        </div>
+                        <div id="tutorial-dialogo">
+                            <p id="tutorial-fantasma-nombre"></p>
+                            <p id="tutorial-mensaje"></p>
+                        </div>
+                        <div id="tutorial-botones">
+                            <button id="tutorial-siguiente">Siguiente →</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="mision">
-                    <!-- Se carga dinámicamente -->
                 </div>
                 <div id="enemigos">
                     <div class="enemigo">  
@@ -43,7 +74,6 @@
                 <div id="tablas">
                     <p>Tablas disponibles:</p>
                     <ul id="tablas-lista">
-                        <!-- Se carga dinámicamente -->
                     </ul>
                 </div>
                 <div id="escribir">
@@ -56,36 +86,6 @@
             </div>
             <div id="feedback-container"></div>
             <div id="resultado-container"></div>
-            <!-- Panel de tutorial -->
-            <div id="tutorial-overlay">
-                <div id="tutorial-panel">
-                    <div id="tutorial-fantasmas">
-                        <div class="fantasma-tutorial" id="fantasma-Mortis">
-                            <img src="resources/images/fantasmas/fantasma_amarillo.png" alt="Mortis">
-                            <p class="fantasma-nombre">Mortis</p>
-                        </div>
-                        <div class="fantasma-tutorial" id="fantasma-Lira">
-                            <img src="resources/images/fantasmas/fantasma_rosa.png" alt="Lira">
-                            <p class="fantasma-nombre">Lira</p>
-                        </div>
-                        <div class="fantasma-tutorial" id="fantasma-Grimm">
-                            <img src="resources/images/fantasmas/fantasma_verde.png" alt="Grimm">
-                            <p class="fantasma-nombre">Grimm</p>
-                        </div>
-                        <div class="fantasma-tutorial" id="fantasma-Pip">
-                            <img src="resources/images/fantasmas/fantasma_azul.png" alt="Pip">
-                            <p class="fantasma-nombre">Pip</p>
-                        </div>
-                    </div>
-                    <div id="tutorial-dialogo">
-                        <p id="tutorial-fantasma-nombre"></p>
-                        <p id="tutorial-mensaje"></p>
-                    </div>
-                    <div id="tutorial-botones">
-                        <button id="tutorial-siguiente">Siguiente →</button>
-                    </div>
-                </div>
-            </div>
         </main>
 
         <!-- Modal de tabla -->

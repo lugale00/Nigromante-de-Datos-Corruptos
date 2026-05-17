@@ -312,13 +312,10 @@ li{
 /* Tutorial overlay */
 #tutorial-overlay {
     display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    position: static; /* ✅ quitamos el fixed */
     width: 100%;
-    z-index: 50;
     justify-content: center;
-    padding-bottom: 1rem;
+    padding: 0;
 }
 
 #tutorial-overlay.activo {
@@ -326,13 +323,12 @@ li{
 }
 
 #tutorial-panel {
-    background-image: url(../../images/back_text.png);
+    background-image: url(../../images/back_titulo.png);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
     padding: 1.5rem 2rem;
-    width: 80%;
-    max-width: 900px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 1rem;
