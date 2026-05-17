@@ -24,7 +24,7 @@ button{
 }
 
 #botones-escribir button{
-    background-color: rgb(255, 196, 87);
+    background-color: rgb(201, 153, 63);
 }
 
 #sentencias{
@@ -336,7 +336,6 @@ li{
 
 #tutorial-fantasmas {
     display: flex;
-    /*justify-content: space-around;*/
     align-items: flex-end;
 }
 
