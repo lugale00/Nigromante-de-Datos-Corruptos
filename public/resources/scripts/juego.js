@@ -40,4 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         getSoloConsulta(sentencia); // ✅ función nueva que no comprueba la misión
     });
+
+    document.getElementById('tutorial-siguiente').addEventListener('click', function() {
+        dialogoIndex++;
+        mostrarDialogo(dialogoIndex);
+    });
+
 });
