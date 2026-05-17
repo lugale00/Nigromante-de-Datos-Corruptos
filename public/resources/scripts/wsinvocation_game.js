@@ -28,8 +28,8 @@ const enemigosPorNivel = {
 };
 
 function getConsulta(sentencia) {
-    if (bloqueado) return; // ✅ ignoramos si está bloqueado
-    setBloqueado(true);    // ✅ bloqueamos mientras se procesa
+    if (bloqueado) return;
+    setBloqueado(true);
 
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `/game/consulta/${encodeURIComponent(sentencia)}`, true);
@@ -54,23 +54,32 @@ function getConsulta(sentencia) {
                 contenedor.appendChild(textarea);
             });
 
-            setBloqueado(false); // ✅ desbloqueamos al terminar si no hay comprobación
+            setBloqueado(false);
+
+            // ✅ Si hay misión activa comprobamos la solución
             if (misionActual) {
                 comprobarSolucion(resultado);
             }
 
-        } else if (xhr.readyState == 4 && xhr.status == 403) { // 403 Forbidden -> nivel insuficiente
-            setBloqueado(false); // ✅ desbloqueamos siempre en error
+            // ✅ Si estamos en un ejercicio del tutorial desbloqueamos el botón siguiente
+            if (enEjercicio) {
+                let btnSiguiente = document.getElementById('tutorial-siguiente');
+                btnSiguiente.disabled = false;
+                btnSiguiente.style.opacity = '1';
+            }
+
+        } else if (xhr.readyState == 4 && xhr.status == 403) {
+            setBloqueado(false);
             mostrarError('Aún no tienes nivel para esa invocación.');
             reducirVidaJugador();
 
-        } else if (xhr.readyState == 4 && xhr.status == 418) { // 418 I'm a teapot -> intento de acceder donde no debe
-            setBloqueado(false); // ✅ desbloqueamos siempre en error
+        } else if (xhr.readyState == 4 && xhr.status == 418) {
+            setBloqueado(false);
             mostrarError('No puedes acceder a ese plano astral.');
             reducirVidaJugador();
 
-        } else if (xhr.readyState == 4 && xhr.status == 500) { // 500 Internal Server Error -> error en la consulta
-            setBloqueado(false); // ✅ desbloqueamos siempre en error
+        } else if (xhr.readyState == 4 && xhr.status == 500) {
+            setBloqueado(false);
             mostrarError('Error en la runa de invocación.');
             reducirVidaJugador();
         }
@@ -434,4 +443,99 @@ function iniciarAutocompletado() {
             sugerencias.style.display = 'none';
         }
     });
+}
+
+// ============================================
+// SISTEMA DE TUTORIAL
+// ============================================
+let dialogosTutorial = [];
+let dialogoIndex = 0;
+let enEjercicio = false;
+
+function iniciarTutorial() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/game/tutorial/dialogos", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            dialogosTutorial = JSON.parse(xhr.responseText);
+
+            // Recuperamos el progreso del tutorial
+            let xhrEstado = new XMLHttpRequest();
+            xhrEstado.open("GET", "/game/tutorial/estado", true);
+            xhrEstado.withCredentials = true;
+            xhrEstado.onreadystatechange = function() {
+                if (xhrEstado.readyState == 4 && xhrEstado.status == 200) {
+                    let estado = JSON.parse(xhrEstado.responseText);
+                    dialogoIndex = estado.dialogoActual || 0;
+                    mostrarDialogo(dialogoIndex);
+                }
+            };
+            xhrEstado.send();
+        }
+    };
+    xhr.send();
+}
+
+function mostrarDialogo(index) {
+    if (index >= dialogosTutorial.length) {
+        // Tutorial completado, subimos de nivel
+        finalizarTutorial();
+        return;
+    }
+
+    let dialogo = dialogosTutorial[index];
+    let overlay = document.getElementById('tutorial-overlay');
+    let mensaje = document.getElementById('tutorial-mensaje');
+    let nombreEl = document.getElementById('tutorial-fantasma-nombre');
+    let btnSiguiente = document.getElementById('tutorial-siguiente');
+
+    // Mostramos el panel
+    overlay.classList.add('activo');
+
+    // Actualizamos el fantasma activo
+    document.querySelectorAll('.fantasma-tutorial').forEach(f => f.classList.remove('activo'));
+    let fantasmaActivo = document.getElementById(`fantasma-${dialogo.fantasma}`);
+    if (fantasmaActivo) fantasmaActivo.classList.add('activo');
+
+    // Mostramos el mensaje
+    nombreEl.textContent = dialogo.fantasma;
+    mensaje.textContent = dialogo.mensaje;
+
+    // Si es ejercicio bloqueamos el siguiente hasta que lo intente
+    if (dialogo.tipo === 'ejercicio') {
+        overlay.classList.add('ejercicio');
+        enEjercicio = true;
+        btnSiguiente.textContent = 'Continuar →';
+        btnSiguiente.disabled = true;
+        btnSiguiente.style.opacity = '0.5';
+        // Desbloqueamos el área de escritura
+        setBloqueado(false);
+    } else {
+        overlay.classList.remove('ejercicio');
+        enEjercicio = false;
+        btnSiguiente.textContent = 'Siguiente →';
+        btnSiguiente.disabled = false;
+        btnSiguiente.style.opacity = '1';
+        // Bloqueamos el área de escritura en diálogos
+        setBloqueado(true);
+    }
+
+    // Guardamos el progreso
+    guardarProgresoTutorial(index);
+}
+
+function guardarProgresoTutorial(index) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/tutorial/avanzar", true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({ dialogoActual: index }));
+}
+
+function finalizarTutorial() {
+    document.getElementById('tutorial-overlay').classList.remove('activo');
+    setBloqueado(false);
+    subirNivel();
 }
