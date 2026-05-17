@@ -156,12 +156,13 @@ function subirNivel() {
 
             if (datos.nivelMaximo) {
                 mostrarExito('¡Has completado el juego! Eres el maestro nigromante.');
-                cambiarEnemigo(3); // ✅ rey en nivel máximo
+                cambiarEnemigo(5);
                 return;
             }
 
             mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
-            cambiarEnemigo(datos.nuevoNivel); // ✅ enemigo del nuevo nivel
+            cambiarEnemigo(datos.nuevoNivel);
+            configurarEnemigo(datos.nuevoNivel); // ✅ actualizamos los corazones al subir de nivel
 
             let nivelEl = document.getElementById('usuario-nivel');
             if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
