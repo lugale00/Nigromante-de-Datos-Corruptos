@@ -66,6 +66,7 @@ function getConsulta(sentencia) {
                 let btnSiguiente = document.getElementById('tutorial-siguiente');
                 btnSiguiente.disabled = false;
                 btnSiguiente.style.opacity = '1';
+                animarEnemigo();
             }
 
         } else if (xhr.readyState == 4 && xhr.status == 403) {
