@@ -301,11 +301,14 @@ function siguienteMision() {
     let nivelEl = document.getElementById('usuario-nivel');
     let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
 
-    // En tutorial no reaparece el enemigo
+    document.getElementById('feedback-container').innerHTML = '';
+    document.getElementById('resultado-container').innerHTML = '';
+    setBloqueado(false);
+
+    // En tutorial avanzamos el diálogo en lugar de reaparecer el enemigo
     if (nivelActual === 1 || nivelActual === 3) {
-        document.getElementById('feedback-container').innerHTML = '';
-        document.getElementById('resultado-container').innerHTML = '';
-        setBloqueado(false);
+        dialogoIndex++;
+        mostrarDialogo(dialogoIndex);
         return;
     }
 
@@ -315,9 +318,6 @@ function siguienteMision() {
         c.src = 'resources/images/corazon.png';
         c.classList.remove('vacio');
     });
-    document.getElementById('feedback-container').innerHTML = '';
-    document.getElementById('resultado-container').innerHTML = '';
-    setBloqueado(false);
 }
 
 function getTablasDisponibles() {
