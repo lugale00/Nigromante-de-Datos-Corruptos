@@ -307,6 +307,9 @@ function siguienteMision() {
 
     // En tutorial avanzamos el diálogo en lugar de reaparecer el enemigo
     if (nivelActual === 1 || nivelActual === 3) {
+        // ✅ restauramos la opacidad del enemigo aunque no lo usemos
+        document.querySelector('.enemigo').style.opacity = '1';
+        document.querySelector('.enemigo').style.transition = '';
         dialogoIndex++;
         mostrarDialogo(dialogoIndex);
         return;
