@@ -18,13 +18,19 @@ const palabrasSQL = [
 
 // Array de enemigos para futuras animaciones o cambios de imagen
 const enemigosPorNivel = {
-    1: ['resources/images/enemies/enemigo_fantasma.png'], // fijo nivel 1
+    1: ['resources/images/enemies/enemigo_fantasma.png'],
     2: [
         'resources/images/enemies/enemigo_araña.png',
         'resources/images/enemies/enemigo_caballo.png',
+        'resources/images/enemies/enemigo_fantasma.png'
+    ],
+    3: ['resources/images/enemies/enemigo_fantasma_lvl2.png'], // tutorial intermedio
+    4: [
+        'resources/images/enemies/enemigo_araña.png',
+        'resources/images/enemies/enemigo_caballo.png',
         'resources/images/enemies/enemigo_fantasma_lvl2.png'
-    ], // aleatorio nivel 2
-    3: ['resources/images/enemies/enemigo_rey.png'] // fijo nivel 3
+    ],
+    5: ['resources/images/enemies/enemigo_rey.png']
 };
 
 function getConsulta(sentencia) {
@@ -553,6 +559,7 @@ function guardarProgresoTutorial(index) {
 function finalizarTutorial() {
     document.getElementById('tutorial-overlay').classList.remove('activo');
     setBloqueado(false);
+    console.log('Finalizando tutorial, nivel actual:', document.getElementById('usuario-nivel').textContent);
     subirNivel();
 }
 
