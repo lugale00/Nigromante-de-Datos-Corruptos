@@ -478,6 +478,11 @@ let dialogoIndex = 0;
 let enEjercicio = false;
 
 function iniciarTutorial() {
+    // ✅ Limpiamos el estado del tutorial anterior
+    dialogosTutorial = [];
+    dialogoIndex = 0;
+    enEjercicio = false;
+
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/tutorial/dialogos", true);
     xhr.withCredentials = true;
@@ -486,7 +491,6 @@ function iniciarTutorial() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             dialogosTutorial = JSON.parse(xhr.responseText);
 
-            // Recuperamos el progreso del tutorial
             let xhrEstado = new XMLHttpRequest();
             xhrEstado.open("GET", "/game/tutorial/estado", true);
             xhrEstado.withCredentials = true;
@@ -559,11 +563,18 @@ function guardarProgresoTutorial(index) {
     xhr.send(JSON.stringify({ dialogoActual: index }));
 }
 
+let tutorialFinalizado = false;
+
 function finalizarTutorial() {
+    if (tutorialFinalizado) return; // ✅ evitamos doble llamada
+    tutorialFinalizado = true;
+
     document.getElementById('tutorial-overlay').classList.remove('activo');
     setBloqueado(false);
-    console.log('Finalizando tutorial, nivel actual:', document.getElementById('usuario-nivel').textContent);
     subirNivel();
+
+    // Reseteamos para el siguiente tutorial
+    setTimeout(() => { tutorialFinalizado = false; }, 2000);
 }
 
 function configurarEnemigo(nivel) {

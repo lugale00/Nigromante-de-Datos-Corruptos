@@ -26,7 +26,7 @@ header {
 }
 
 #admin-nombre {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1.2rem;
     font-weight: 700;
     color: antiquewhite;
@@ -114,7 +114,7 @@ header {
 }
 
 #tabla-estudiantes th {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1rem;
     font-weight: 700;
     padding: 0.5rem;
@@ -122,7 +122,7 @@ header {
 }
 
 #tabla-estudiantes td {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1rem;
     padding: 0.5rem;
     border-bottom: 1px solid rgba(0,0,0,0.1);
@@ -189,7 +189,7 @@ header {
 }
 
 #busqueda {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1.2rem;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -199,7 +199,7 @@ header {
 }
 
 #tabla-info {
-    font-family: "Pixelify Sans", sans-serif;
+    font-family: "Tiny5", sans-serif;
     font-size: 1rem;
     text-align: center;
     margin-top: 1rem;
