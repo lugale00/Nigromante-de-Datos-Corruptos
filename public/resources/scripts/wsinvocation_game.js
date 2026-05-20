@@ -474,14 +474,12 @@ function iniciarAutocompletado() {
 // SISTEMA DE TUTORIAL
 // ============================================
 let dialogosTutorial = [];
-let dialogoIndex = 0;
-let enEjercicio = false;
 
 function iniciarTutorial() {
-    // ✅ Limpiamos el estado del tutorial anterior
     dialogosTutorial = [];
-    dialogoIndex = 0;
+    dialogoIndex = 0; // ✅ siempre desde 0, ignoramos la sesión
     enEjercicio = false;
+    tutorialFinalizado = false;
 
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/tutorial/dialogos", true);
@@ -490,18 +488,7 @@ function iniciarTutorial() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             dialogosTutorial = JSON.parse(xhr.responseText);
-
-            let xhrEstado = new XMLHttpRequest();
-            xhrEstado.open("GET", "/game/tutorial/estado", true);
-            xhrEstado.withCredentials = true;
-            xhrEstado.onreadystatechange = function() {
-                if (xhrEstado.readyState == 4 && xhrEstado.status == 200) {
-                    let estado = JSON.parse(xhrEstado.responseText);
-                    dialogoIndex = estado.dialogoActual || 0;
-                    mostrarDialogo(dialogoIndex);
-                }
-            };
-            xhrEstado.send();
+            mostrarDialogo(0); // ✅ siempre desde el primer diálogo
         }
     };
     xhr.send();
