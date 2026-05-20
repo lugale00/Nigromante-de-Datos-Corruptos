@@ -169,7 +169,12 @@ function subirNivel() {
 
             mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
             cambiarEnemigo(datos.nuevoNivel);
-            configurarEnemigo(datos.nuevoNivel); // ✅ actualizamos los corazones al subir de nivel
+            configurarEnemigo(datos.nuevoNivel);
+
+            // ✅ Restauramos la opacidad del enemigo al entrar en nivel de combate
+            if (datos.nuevoNivel !== 1 && datos.nuevoNivel !== 3) {
+                document.querySelector('.enemigo').style.opacity = '1';
+            }
 
             let nivelEl = document.getElementById('usuario-nivel');
             if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
@@ -311,10 +316,8 @@ function siguienteMision() {
     document.getElementById('resultado-container').innerHTML = '';
     setBloqueado(false);
 
-    // En tutorial avanzamos el diálogo en lugar de reaparecer el enemigo
     if (nivelActual === 1 || nivelActual === 3) {
-        // ✅ restauramos la opacidad del enemigo aunque no lo usemos
-        document.querySelector('.enemigo').style.opacity = '1';
+        // ✅ En tutorial mantenemos el enemigo oculto
         document.querySelector('.enemigo').style.transition = '';
         dialogoIndex++;
         mostrarDialogo(dialogoIndex);
