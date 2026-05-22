@@ -131,14 +131,16 @@ function getMisionActual(idMisionActual = null) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let datos = JSON.parse(xhr.responseText);
+            console.log('getMisionActual respuesta:', datos); // ← log
 
             if (datos.esTutorial) {
-                // ✅ Es un nivel de tutorial, iniciamos los diálogos
+                console.log('Es tutorial, iniciando...'); // ← log
                 iniciarTutorial();
                 return;
             }
 
             if (datos.subirNivel) {
+                console.log('Subiendo nivel...'); // ← log
                 subirNivel();
                 return;
             }
@@ -168,6 +170,7 @@ function subirNivel() {
             }
 
             mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
+            console.log('Subido a nivel:', datos.nuevoNivel); // ← log
             cambiarEnemigo(datos.nuevoNivel);
             configurarEnemigo(datos.nuevoNivel);
 
