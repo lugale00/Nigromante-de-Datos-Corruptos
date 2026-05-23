@@ -154,7 +154,12 @@ function getMisionActual(idMisionActual = null) {
     xhr.send();
 }
 
+let subiendoNivel = false;
+
 function subirNivel() {
+    if (subiendoNivel) return; // ✅ evitamos llamadas múltiples
+    subiendoNivel = true;
+
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/game/subirNivel", true);
     xhr.withCredentials = true;
@@ -167,15 +172,14 @@ function subirNivel() {
             if (datos.nivelMaximo) {
                 mostrarExito('¡Has completado el juego! Eres el maestro nigromante.');
                 cambiarEnemigo(5);
+                subiendoNivel = false;
                 return;
             }
 
             mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
-            console.log('Subido a nivel:', datos.nuevoNivel); // ← log
             cambiarEnemigo(datos.nuevoNivel);
             configurarEnemigo(datos.nuevoNivel);
 
-            // ✅ Restauramos la opacidad del enemigo al entrar en nivel de combate
             if (datos.nuevoNivel !== 1 && datos.nuevoNivel !== 3) {
                 document.querySelector('.enemigo').style.opacity = '1';
             }
@@ -184,6 +188,7 @@ function subirNivel() {
             if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
 
             setTimeout(() => {
+                subiendoNivel = false; // ✅ reseteamos tras el timeout
                 getTablasDisponibles();
                 getMisionActual();
             }, 2000);
