@@ -122,6 +122,7 @@ function comprobarSolucion(resultadoJugador) {
 }
 
 function getMisionActual(idMisionActual = null) {
+    console.log('getMisionActual llamada desde:', new Error().stack); // ← log
     let xhr = new XMLHttpRequest();
     let url = `/game/mision`;
     if (idMisionActual) url += `?idMisionActual=${idMisionActual}`;
