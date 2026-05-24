@@ -487,9 +487,13 @@ let dialogosTutorial = [];
 
 function iniciarTutorial() {
     dialogosTutorial = [];
-    dialogoIndex = 0; // ✅ siempre desde 0, ignoramos la sesión
+    dialogoIndex = 0;
     enEjercicio = false;
     tutorialFinalizado = false;
+
+    document.getElementById('mision').innerHTML = '';
+    document.getElementById('feedback-container').innerHTML = '';
+    document.getElementById('resultado-container').innerHTML = '';
 
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/tutorial/dialogos", true);
@@ -538,6 +542,10 @@ function mostrarDialogo(index) {
         btnSiguiente.style.opacity = '0.5';
         // Desbloqueamos el área de escritura
         setBloqueado(false);
+
+        let sentenciaEl = document.getElementById('sentencia');
+        sentenciaEl.placeholder = dialogo.pista || 'Escribe tu consulta SQL aquí...';
+        sentenciaEl.value = ''; // limpiamos lo que hubiera antes
     } else {
         overlay.classList.remove('ejercicio');
         enEjercicio = false;
