@@ -78,17 +78,17 @@ function getConsulta(sentencia) {
         } else if (xhr.readyState == 4 && xhr.status == 403) {
             setBloqueado(false);
             mostrarError('Aún no tienes nivel para esa invocación.');
-            reducirVidaJugador();
+            if (!enEjercicio) reducirVidaJugador(); // ✅ solo penalizamos fuera del tutorial
 
         } else if (xhr.readyState == 4 && xhr.status == 418) {
             setBloqueado(false);
             mostrarError('No puedes acceder a ese plano astral.');
-            reducirVidaJugador();
+            if (!enEjercicio) reducirVidaJugador();
 
         } else if (xhr.readyState == 4 && xhr.status == 500) {
             setBloqueado(false);
             mostrarError('Error en la runa de invocación.');
-            reducirVidaJugador();
+            if (!enEjercicio) reducirVidaJugador();
         }
     };
     xhr.send();
@@ -263,10 +263,22 @@ function reducirVidaJugador() {
 }
 
 function enemigoMuerto() {
+    let nivelEl = document.getElementById('usuario-nivel');
+    let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
+
     let enemigo = document.querySelector('.enemigo');
     enemigo.style.opacity = '0';
     enemigo.style.transition = 'opacity 1s';
-    setTimeout(() => siguienteMision(), 1500);
+
+    if (nivelActual === 1 || nivelActual === 3) {
+        // ✅ En tutorial mantenemos oculto y avanzamos el diálogo
+        setTimeout(() => {
+            enemigo.style.transition = '';
+            siguienteMision();
+        }, 1500);
+    } else {
+        setTimeout(() => siguienteMision(), 1500);
+    }
 }
 
 async function jugadorMuerto() {
@@ -554,6 +566,9 @@ function mostrarDialogo(index) {
         btnSiguiente.style.opacity = '1';
         // Bloqueamos el área de escritura en diálogos
         setBloqueado(true);
+
+         // ✅ Restauramos el placeholder por defecto
+        document.getElementById('sentencia').placeholder = 'Escribe tu sentencia SQL aquí...';
     }
 
     // Guardamos el progreso
@@ -582,12 +597,18 @@ function finalizarTutorial() {
     setTimeout(() => { tutorialFinalizado = false; }, 2000);
 }
 
+const corazonesPorNivel = {
+    1: 1,
+    2: 3,
+    3: 2,
+    4: 3,
+    5: 3
+};
+
 function configurarEnemigo(nivel) {
     let contenedor = document.getElementById('enemigo-vida');
     contenedor.innerHTML = '';
-
-    // Niveles de tutorial: 1 corazón, niveles normales: 3 corazones
-    let numCorazones = (nivel === 1 || nivel === 3) ? 1 : 3;
+    let numCorazones = corazonesPorNivel[nivel] || 3;
 
     for (let i = 0; i < numCorazones; i++) {
         let img = document.createElement('img');
