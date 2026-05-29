@@ -337,7 +337,7 @@ function siguienteMision() {
     document.getElementById('resultado-container').innerHTML = '';
     setBloqueado(false);
 
-    if (nivelActual === 1 || nivelActual === 3) {
+    if (nivelActual === 1 ) {
         // ✅ En tutorial mantenemos el enemigo oculto siempre
         document.querySelector('.enemigo').style.transition = '';
         document.querySelector('.enemigo').style.opacity = '0';
