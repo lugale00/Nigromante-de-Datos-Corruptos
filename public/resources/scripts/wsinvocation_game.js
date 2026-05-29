@@ -338,11 +338,12 @@ function siguienteMision() {
     setBloqueado(false);
 
     if (nivelActual === 1 || nivelActual === 3) {
+        // ✅ En tutorial mantenemos el enemigo oculto siempre
         document.querySelector('.enemigo').style.transition = '';
-        document.querySelector('.enemigo').style.opacity = '1';
+        document.querySelector('.enemigo').style.opacity = '0';
         dialogoIndex++;
         mostrarDialogo(dialogoIndex);
-        return; // ✅ el return evita que continúe al getMisionActual de abajo
+        return;
     }
 
     document.querySelector('.enemigo').style.opacity = '1';
@@ -351,7 +352,6 @@ function siguienteMision() {
         c.src = 'resources/images/corazon.png';
         c.classList.remove('vacio');
     });
-    getMisionActual(misionActual ? misionActual.id : null); // ← ¿tienes esto aquí?
 }
 
 function getTablasDisponibles() {
