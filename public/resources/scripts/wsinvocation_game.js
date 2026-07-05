@@ -4,7 +4,7 @@ let misionActual = null;
 // Variable de bloqueo global
 let bloqueado = false;
 
-const palabrasSQL = [
+const palabrasSQL = [ // Palabras clave SQL para autocompletado
     // Cláusulas principales
     'SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN',
     'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'DISTINCT',
@@ -33,7 +33,7 @@ const enemigosPorNivel = {
     5: ['resources/images/enemies/enemigo_rey.png']
 };
 
-function getConsulta(sentencia) {
+function getConsulta(sentencia) { // función principal para enviar la consulta al servidor
     if (bloqueado) return;
     setBloqueado(true);
 
@@ -75,17 +75,17 @@ function getConsulta(sentencia) {
                 animarEnemigo();
             }
 
-        } else if (xhr.readyState == 4 && xhr.status == 403) {
+        } else if (xhr.readyState == 4 && xhr.status == 403) { // 403 Forbidden -> nivel insuficiente
             setBloqueado(false);
             mostrarError('Aún no tienes nivel para esa invocación.');
-            if (!enEjercicio) reducirVidaJugador(); // ✅ solo penalizamos fuera del tutorial
+            if (!enEjercicio) reducirVidaJugador(); // solo penalizamos fuera del tutorial
 
         } else if (xhr.readyState == 4 && xhr.status == 418) {
             setBloqueado(false);
-            mostrarError('No puedes acceder a ese plano astral.');
+            mostrarError('No puedes acceder a ese plano astral.'); // 418 I'm a teapot -> intento de acceder donde no debe
             if (!enEjercicio) reducirVidaJugador();
 
-        } else if (xhr.readyState == 4 && xhr.status == 500) {
+        } else if (xhr.readyState == 4 && xhr.status == 500) { // 500 Internal Server Error -> error en la consulta
             setBloqueado(false);
             mostrarError('Error en la runa de invocación.');
             if (!enEjercicio) reducirVidaJugador();
@@ -94,7 +94,8 @@ function getConsulta(sentencia) {
     xhr.send();
 }
 
-function comprobarSolucion(resultadoJugador) {
+function comprobarSolucion(resultadoJugador) { // función para enviar la solución del jugador al servidor y comprobarla
+    if (!misionActual) return; // evitamos enviar si no hay misión activa
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/game/comprobar", true);
     xhr.withCredentials = true;
@@ -110,18 +111,18 @@ function comprobarSolucion(resultadoJugador) {
             } else {
                 mostrarError('Invocación incorrecta. El enemigo contraataca.');
                 reducirVidaJugador();
-                setBloqueado(false); // ✅ desbloqueamos tras el fallo
+                setBloqueado(false); // desbloqueamos tras el fallo
             }
         }
     };
-
+    // Enviamos la misión actual y el resultado del jugador al servidor para su verificación
     xhr.send(JSON.stringify({
         idMision: misionActual.id,
         resultadoJugador: resultadoJugador
     }));
 }
 
-function getMisionActual(idMisionActual = null) {
+function getMisionActual(idMisionActual = null) { // función para obtener la misión actual del jugador desde el servidor
     console.log('getMisionActual llamada desde:', new Error().stack); // ← log
     let xhr = new XMLHttpRequest();
     let url = `/game/mision`;
@@ -156,8 +157,8 @@ function getMisionActual(idMisionActual = null) {
 
 let subiendoNivel = false;
 
-function subirNivel() {
-    if (subiendoNivel) return; // ✅ evitamos llamadas múltiples
+function subirNivel() { // función para subir de nivel al jugador y actualizar la interfaz
+    if (subiendoNivel) return; // evitamos llamadas múltiples
     subiendoNivel = true;
 
     let xhr = new XMLHttpRequest();
@@ -188,7 +189,7 @@ function subirNivel() {
             if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
 
             setTimeout(() => {
-                subiendoNivel = false; // ✅ reseteamos tras el timeout
+                subiendoNivel = false; // reseteamos tras el timeout
                 getTablasDisponibles();
                 getMisionActual();
             }, 2000);
@@ -197,7 +198,7 @@ function subirNivel() {
     xhr.send();
 }
 
-function mostrarError(mensaje) {
+function mostrarError(mensaje) { // función para mostrar mensajes de error en la interfaz
     let contenedor = document.getElementById('feedback-container');
     contenedor.innerHTML = '';
     let errorMsg = document.createElement('textarea');
@@ -208,7 +209,7 @@ function mostrarError(mensaje) {
     contenedor.appendChild(errorMsg);
 }
 
-function mostrarExito(mensaje) {
+function mostrarExito(mensaje) { // función para mostrar mensajes de éxito en la interfaz
     let contenedor = document.getElementById('feedback-container');
     contenedor.innerHTML = '';
     let msg = document.createElement('textarea');
@@ -219,7 +220,7 @@ function mostrarExito(mensaje) {
     contenedor.appendChild(msg);
 }
 
-function animarEnemigo() {
+function animarEnemigo() { // función para animar al enemigo cuando recibe un golpe
     setBloqueado(true); // ✅ bloqueamos durante la animación
     let enemigo = document.querySelector('.enemigo-img');
     enemigo.classList.add('enemigo-golpeado');
@@ -231,11 +232,11 @@ function animarEnemigo() {
     }, 600);
 }
 
-function reducirVidaEnemigo() {
+function reducirVidaEnemigo() { // función para reducir la vida del enemigo y comprobar si ha muerto
     let corazones = document.querySelectorAll('.vida-enemigo');
     for (let i = corazones.length - 1; i >= 0; i--) {
         if (!corazones[i].classList.contains('vacio')) {
-            corazones[i].src = 'resources/images/corazon_vacio.png'; // ✅ cambia la imagen
+            corazones[i].src = 'resources/images/corazon_vacio.png'; // cambia la imagen a un corazón vacío
             corazones[i].classList.add('vacio');
             break;
         }
@@ -247,12 +248,13 @@ function reducirVidaEnemigo() {
     }
 }
 
-function reducirVidaJugador() {
+function reducirVidaJugador() { // función para reducir la vida del jugador y comprobar si ha muerto
     let vidaEl = document.getElementById('jugador-vida');
     let vidaActual = parseInt(vidaEl.textContent.replace('Vida: ', ''));
     let nuevaVida = Math.max(0, vidaActual - 20);
     vidaEl.textContent = `Vida: ${nuevaVida}`;
 
+    // Actualizamos el color de fondo de la barra de vida
     vidaEl.style.background = `linear-gradient(to right, 
         rgba(46, 169, 46, 0.65) ${nuevaVida}%, 
         rgba(255, 0, 0, 0.65) ${nuevaVida}%)`;
@@ -262,7 +264,7 @@ function reducirVidaJugador() {
     }
 }
 
-function enemigoMuerto() {
+function enemigoMuerto() { // función para manejar la muerte del enemigo y avanzar a la siguiente misión
     let nivelEl = document.getElementById('usuario-nivel');
     let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
 
@@ -281,11 +283,11 @@ function enemigoMuerto() {
     }
 }
 
-async function jugadorMuerto() {
+async function jugadorMuerto() { // función para manejar la muerte del jugador y reiniciar el juego
     alert('Has sido derrotado. El Rey Corrupto ha ganado esta batalla...');
-    const ok = await nuevoJuego(); // ✅ resetea el nivel a 1 en BD y sesión
+    const ok = await nuevoJuego(); // resetea el nivel a 1 en BD y sesión
     if (ok) {
-        document.location.href = 'menu.html'; // ✅ vuelve al menú
+        document.location.href = 'menu.html'; // vuelve al menú
     }
 }
 
