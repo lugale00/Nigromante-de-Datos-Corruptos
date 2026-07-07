@@ -166,6 +166,16 @@ function renderizarTablaEstudiantes(usuarios) {
     });
 }
 
+function renderizarResumen(usuarios) {
+    let totalIntentos = usuarios.reduce((s, u) => s + parseInt(u.total_intentos || 0), 0);
+    let totalAciertos = usuarios.reduce((s, u) => s + parseInt(u.aciertos || 0), 0);
+    let tasaGlobal = totalIntentos > 0 ? Math.round(totalAciertos * 100 / totalIntentos) : 0;
+
+    document.getElementById('total-estudiantes').textContent = usuarios.length;
+    document.getElementById('total-intentos').textContent = totalIntentos;
+    document.getElementById('tasa-global').textContent = tasaGlobal + '%';
+}
+
 function promoverUsuario(nombre) {
     if (!confirm(`¿Seguro que quieres hacer administrador a ${nombre}?`)) return;
 
