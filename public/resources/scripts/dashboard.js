@@ -213,7 +213,7 @@ function renderizarGraficaNiveles(usuarios) {
         options: {
             plugins: {
                 legend: {
-                    labels: { font: { family: 'Pixelify Sans', size: 14 } }
+                    labels: { font: { family: 'Tiny5', size: 14 } }
                 }
             }
         }
@@ -245,8 +245,8 @@ function renderizarGraficaMisiones(misiones) {
         },
         options: {
             scales: {
-                y: { min: 0, max: 100, ticks: { font: { family: 'Pixelify Sans' } } },
-                x: { ticks: { font: { family: 'Pixelify Sans' }, maxRotation: 45 } }
+                y: { min: 0, max: 100, ticks: { font: { family: 'Tiny5' } } },
+                x: { ticks: { font: { family: 'Tiny5' }, maxRotation: 45 } }
             },
             plugins: { legend: { display: false } }
         }
@@ -281,11 +281,11 @@ function renderizarGraficaActividad(dias) {
         },
         options: {
             scales: {
-                x: { ticks: { font: { family: 'Pixelify Sans' }, maxRotation: 45 } },
-                y: { ticks: { font: { family: 'Pixelify Sans' } } }
+                x: { ticks: { font: { family: 'Tiny5' }, maxRotation: 45 } },
+                y: { ticks: { font: { family: 'Tiny5' } } }
             },
             plugins: {
-                legend: { labels: { font: { family: 'Pixelify Sans', size: 14 } } }
+                legend: { labels: { font: { family: 'Tiny5', size: 14 } } }
             }
         }
     });
