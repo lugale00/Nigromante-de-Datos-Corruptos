@@ -1,7 +1,8 @@
 body{
     background-image: url(../images/fondo_cementerio.png);
     background-repeat: no-repeat;
-    background-size: 100% 120%;
+    background-size: 100%;
+    background-attachment: fixed;
 }
 
 header {
@@ -11,7 +12,6 @@ header {
     background-size: 50% 70%;
     text-align: center;
     padding: 0.05rem;
-    background-attachment: fixed;
 }
 
 h1{
