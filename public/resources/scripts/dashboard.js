@@ -200,14 +200,21 @@ function renderizarGraficaNiveles(usuarios) {
     let nivel1 = usuarios.filter(u => u.nivel_actual == 1).length;
     let nivel2 = usuarios.filter(u => u.nivel_actual == 2).length;
     let nivel3 = usuarios.filter(u => u.nivel_actual == 3).length;
+    let nivel4 = usuarios.filter(u => u.nivel_actual == 4).length;
+    let nivel5 = usuarios.filter(u => u.nivel_actual == 5).length;
 
-    new Chart(document.getElementById('grafica-niveles'), {
+    // ✅ Destruimos el gráfico anterior si existe
+    let canvas = document.getElementById('grafica-niveles');
+    let chartExistente = Chart.getChart(canvas);
+    if (chartExistente) chartExistente.destroy();
+
+    new Chart(canvas, {
         type: 'doughnut',
         data: {
-            labels: ['Nivel 1', 'Nivel 2', 'Nivel 3'],
+            labels: ['Nivel 1', 'Nivel 2', 'Nivel 3', 'Nivel 4', 'Nivel 5'],
             datasets: [{
-                data: [nivel1, nivel2, nivel3],
-                backgroundColor: ['#6b3fa0', '#a05a2c', '#2c6ba0']
+                data: [nivel1, nivel2, nivel3, nivel4, nivel5],
+                backgroundColor: ['#6b3fa0', '#a05a2c', '#2c6ba0', '#3fa06b', '#a03f3f']
             }]
         },
         options: {
@@ -221,6 +228,11 @@ function renderizarGraficaNiveles(usuarios) {
 }
 
 function renderizarGraficaMisiones(misiones) {
+    // Destruimos el gráfico anterior si existe
+    let canvas = document.getElementById('grafica-misiones');
+    let chartExistente = Chart.getChart(canvas);
+    if (chartExistente) chartExistente.destroy()
+
     // Misión más difícil (menor tasa de acierto con al menos 1 intento)
     let conIntentos = misiones.filter(m => m.total_intentos > 0);
     if (conIntentos.length > 0) {
@@ -254,6 +266,11 @@ function renderizarGraficaMisiones(misiones) {
 }
 
 function renderizarGraficaActividad(dias) {
+    // Destruimos el gráfico anterior si existe
+    let canvas = document.getElementById('grafica-actividad');
+    let chartExistente = Chart.getChart(canvas);
+    if (chartExistente) chartExistente.destroy();
+
     let labels = dias.map(d => new Date(d.dia).toLocaleDateString('es-ES')).reverse();
     let totales = dias.map(d => parseInt(d.total)).reverse();
     let aciertos = dias.map(d => parseInt(d.aciertos)).reverse();
