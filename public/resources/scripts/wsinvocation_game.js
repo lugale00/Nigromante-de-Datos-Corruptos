@@ -498,7 +498,7 @@ function iniciarTutorial() {
     let nivelEl = document.getElementById('usuario-nivel');
     let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
     if (nivelActual === 1) {
-        document.querySelector('.enemigo').style.opacity = '0';
+        document.querySelector('.enemigo').style.opacity = '1';
         document.querySelector('.enemigo').style.transition = '';
     }
 
