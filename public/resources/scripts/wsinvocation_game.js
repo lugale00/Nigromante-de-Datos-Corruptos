@@ -497,10 +497,9 @@ function iniciarTutorial() {
 
     let nivelEl = document.getElementById('usuario-nivel');
     let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
-    if (nivelActual === 1) {
-        document.querySelector('.enemigo').style.opacity = '1';
-        document.querySelector('.enemigo').style.transition = '';
-    }
+
+    document.querySelector('.enemigo').style.opacity = '1';
+    document.querySelector('.enemigo').style.transition = '';
 
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/tutorial/dialogos", true);
@@ -589,10 +588,10 @@ function finalizarTutorial() {
 
     let nivelEl = document.getElementById('usuario-nivel');
     let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
-    if (nivelActual === 1) {
-        document.querySelector('.enemigo').style.opacity = '1';
-        document.querySelector('.enemigo').style.transition = '';
-    }
+
+    document.querySelector('.enemigo').style.opacity = '1';
+    document.querySelector('.enemigo').style.transition = '';
+
 
     subirNivel();
 
