@@ -264,23 +264,11 @@ function reducirVidaJugador() { // función para reducir la vida del jugador y c
     }
 }
 
-function enemigoMuerto() { // función para manejar la muerte del enemigo y avanzar a la siguiente misión
-    let nivelEl = document.getElementById('usuario-nivel');
-    let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
-
+function enemigoMuerto() { // función para manejar la muerte del enemigo y pasar a la siguiente misión
     let enemigo = document.querySelector('.enemigo');
-    enemigo.style.opacity = '0';
     enemigo.style.transition = 'opacity 1s';
-
-    if (nivelActual === 1 || nivelActual === 3) {
-        // ✅ En tutorial mantenemos oculto y avanzamos el diálogo
-        setTimeout(() => {
-            enemigo.style.transition = '';
-            siguienteMision();
-        }, 1500);
-    } else {
-        setTimeout(() => siguienteMision(), 1500);
-    }
+    enemigo.style.opacity = '0';
+    setTimeout(() => siguienteMision(), 1500);
 }
 
 async function jugadorMuerto() { // función para manejar la muerte del jugador y reiniciar el juego
@@ -331,7 +319,7 @@ function getSoloConsulta(sentencia) {
     xhr.send();
 }
 
-function siguienteMision() {
+function siguienteMision() { // función para pasar a la siguiente misión tras derrotar al enemigo
     let nivelEl = document.getElementById('usuario-nivel');
     let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
 
@@ -339,13 +327,13 @@ function siguienteMision() {
     document.getElementById('resultado-container').innerHTML = '';
     setBloqueado(false);
 
-    if (nivelActual === 1) {
-        // ✅ En tutorial mantenemos el enemigo oculto siempre
+    if (nivelActual === 1 || nivelActual === 3) {
         dialogoIndex++;
         mostrarDialogo(dialogoIndex);
         return;
     }
 
+    // ✅ Solo en niveles normales restauramos el enemigo
     document.querySelector('.enemigo').style.opacity = '1';
     document.querySelector('.enemigo').style.transition = '';
     document.querySelectorAll('.vida-enemigo').forEach(c => {
@@ -507,6 +495,13 @@ function iniciarTutorial() {
     document.getElementById('feedback-container').innerHTML = '';
     document.getElementById('resultado-container').innerHTML = '';
 
+    let nivelEl = document.getElementById('usuario-nivel');
+    let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
+    if (nivelActual === 1) {
+        document.querySelector('.enemigo').style.opacity = '0';
+        document.querySelector('.enemigo').style.transition = '';
+    }
+
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/tutorial/dialogos", true);
     xhr.withCredentials = true;
@@ -591,6 +586,14 @@ function finalizarTutorial() {
 
     document.getElementById('tutorial-overlay').classList.remove('activo');
     setBloqueado(false);
+
+    let nivelEl = document.getElementById('usuario-nivel');
+    let nivelActual = nivelEl ? parseInt(nivelEl.textContent.replace('Nivel ', '')) : 1;
+    if (nivelActual === 1) {
+        document.querySelector('.enemigo').style.opacity = '1';
+        document.querySelector('.enemigo').style.transition = '';
+    }
+
     subirNivel();
 
     // Reseteamos para el siguiente tutorial
