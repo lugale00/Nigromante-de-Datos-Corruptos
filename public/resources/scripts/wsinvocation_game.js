@@ -341,8 +341,6 @@ function siguienteMision() {
 
     if (nivelActual === 1 || nivelActual === 3) {
         // ✅ En tutorial mantenemos el enemigo oculto siempre
-        document.querySelector('.enemigo').style.transition = '';
-        document.querySelector('.enemigo').style.opacity = '0';
         dialogoIndex++;
         mostrarDialogo(dialogoIndex);
         return;
