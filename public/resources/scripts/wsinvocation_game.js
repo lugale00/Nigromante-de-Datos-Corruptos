@@ -339,7 +339,7 @@ function siguienteMision() {
     document.getElementById('resultado-container').innerHTML = '';
     setBloqueado(false);
 
-    if (nivelActual === 1 || nivelActual === 3) {
+    if (nivelActual === 1) {
         // ✅ En tutorial mantenemos el enemigo oculto siempre
         dialogoIndex++;
         mostrarDialogo(dialogoIndex);
