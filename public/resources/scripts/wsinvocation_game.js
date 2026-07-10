@@ -62,33 +62,31 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
 
             setBloqueado(false);
 
-            // ✅ Si hay misión activa comprobamos la solución
             if (misionActual) {
                 comprobarSolucion(resultado);
             }
 
-            // ✅ Si estamos en un ejercicio del tutorial desbloqueamos el botón siguiente
             if (enEjercicio) {
                 let btnSiguiente = document.getElementById('tutorial-siguiente');
                 btnSiguiente.disabled = false;
                 btnSiguiente.style.opacity = '1';
-                animarEnemigo();
+                animarEnemigo(); // ✅ daño al enemigo solo si la consulta es válida
             }
 
-        } else if (xhr.readyState == 4 && xhr.status == 403) { // 403 Forbidden -> nivel insuficiente
+        } else if (xhr.readyState == 4 && xhr.status == 403) {
             setBloqueado(false);
             mostrarError('Aún no tienes nivel para esa invocación.');
-            if (!enEjercicio) reducirVidaJugador(); // solo penalizamos fuera del tutorial
+            if (!enEjercicio) reducirVidaJugador(); // ✅ sin daño en tutorial
 
         } else if (xhr.readyState == 4 && xhr.status == 418) {
             setBloqueado(false);
-            mostrarError('No puedes acceder a ese plano astral.'); // 418 I'm a teapot -> intento de acceder donde no debe
+            mostrarError('No puedes acceder a ese plano astral.');
             if (!enEjercicio) reducirVidaJugador();
 
-        } else if (xhr.readyState == 4 && xhr.status == 500) { // 500 Internal Server Error -> error en la consulta
+        } else if (xhr.readyState == 4 && xhr.status == 500) {
             setBloqueado(false);
             mostrarError('Error en la runa de invocación.');
-            if (!enEjercicio) reducirVidaJugador();
+            if (!enEjercicio) reducirVidaJugador(); // ✅ sin daño en tutorial
         }
     };
     xhr.send();
@@ -490,6 +488,7 @@ function iniciarTutorial() {
     dialogoIndex = 0;
     enEjercicio = false;
     tutorialFinalizado = false;
+    misionActual = null; // limpiamos la misión anterior
 
     document.getElementById('mision').innerHTML = '';
     document.getElementById('feedback-container').innerHTML = '';
