@@ -157,8 +157,8 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
 
 let subiendoNivel = false;
 
-function subirNivel() { // función para subir de nivel al jugador y actualizar la interfaz
-    if (subiendoNivel) return; // evitamos llamadas múltiples
+function subirNivel() {
+    if (subiendoNivel) return;
     subiendoNivel = true;
 
     let xhr = new XMLHttpRequest();
@@ -181,15 +181,15 @@ function subirNivel() { // función para subir de nivel al jugador y actualizar 
             cambiarEnemigo(datos.nuevoNivel);
             configurarEnemigo(datos.nuevoNivel);
 
-            if (datos.nuevoNivel !== 1 && datos.nuevoNivel !== 3) {
-                document.querySelector('.enemigo').style.opacity = '1';
-            }
+            // ✅ Siempre restauramos la opacidad al subir de nivel
+            document.querySelector('.enemigo').style.opacity = '1';
+            document.querySelector('.enemigo').style.transition = '';
 
             let nivelEl = document.getElementById('usuario-nivel');
             if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
 
             setTimeout(() => {
-                subiendoNivel = false; // reseteamos tras el timeout
+                subiendoNivel = false;
                 getTablasDisponibles();
                 getMisionActual();
             }, 2000);
@@ -339,7 +339,7 @@ function siguienteMision() {
     document.getElementById('resultado-container').innerHTML = '';
     setBloqueado(false);
 
-    if (nivelActual === 1 ) {
+    if (nivelActual === 1 || nivelActual === 3) {
         // ✅ En tutorial mantenemos el enemigo oculto siempre
         document.querySelector('.enemigo').style.transition = '';
         document.querySelector('.enemigo').style.opacity = '0';
