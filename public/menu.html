@@ -13,6 +13,16 @@
         <script src="resources/scripts/wsinvocation_sesion.js" defer></script>
         <script src="resources/scripts/menu.js" defer></script>
         <link rel="icon" type="image/png" href="resources/images/favicon.png">
+        <script>
+            fetch('/game/sesion', { credentials: 'include' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.nombre) {
+                        window.location.href = 'menu.html';
+                    }
+                })
+                .catch(() => {});
+        </script>
     </head>
     <body>
         <header>

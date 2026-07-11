@@ -217,7 +217,6 @@ function mostrarExito(mensaje) { // función para mostrar mensajes de éxito en 
 function animarEnemigo() { // función para animar al enemigo cuando recibe un golpe
     setBloqueado(true); // ✅ bloqueamos durante la animación
     let enemigo = document.querySelector('.enemigo-img');
-
     let nigromante = document.getElementById('jugador-img');
 
     // ✅ Cambiamos el sprite del nigromante al de ataque
