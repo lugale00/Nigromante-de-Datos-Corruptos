@@ -217,12 +217,21 @@ function mostrarExito(mensaje) { // función para mostrar mensajes de éxito en 
 function animarEnemigo() { // función para animar al enemigo cuando recibe un golpe
     setBloqueado(true); // ✅ bloqueamos durante la animación
     let enemigo = document.querySelector('.enemigo-img');
+
+    let nigromante = document.getElementById('jugador-img');
+
+    // ✅ Cambiamos el sprite del nigromante al de ataque
+    nigromante.src = 'resources/images/nigromante_attack.png';
+
     enemigo.classList.add('enemigo-golpeado');
 
     setTimeout(() => {
         enemigo.classList.remove('enemigo-golpeado');
         reducirVidaEnemigo();
         setBloqueado(false); // ✅ desbloqueamos tras la animación
+
+        // ✅ Restauramos el sprite del nigromante
+        nigromante.src = 'resources/images/nigromante.png';
     }, 600);
 }
 

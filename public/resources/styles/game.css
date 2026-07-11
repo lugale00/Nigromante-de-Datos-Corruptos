@@ -313,7 +313,7 @@ li{
 /* Tutorial overlay */
 #tutorial-overlay {
     display: none;
-    position: static; /* ✅ quitamos el fixed */
+    position: static; 
     width: 50%;
     justify-content: center;
     padding: 0;
