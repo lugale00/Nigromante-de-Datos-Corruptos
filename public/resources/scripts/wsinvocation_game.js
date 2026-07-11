@@ -67,16 +67,12 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
             }
 
             if (enEjercicio) {
-                let btnSiguiente = document.getElementById('tutorial-siguiente');
-                btnSiguiente.disabled = false;
-                btnSiguiente.style.opacity = '1';
-                animarEnemigo(); // ✅ daño al enemigo solo si la consulta es válida
+                comprobarSolucionTutorial(resultado);
             }
-
         } else if (xhr.readyState == 4 && xhr.status == 403) {
             setBloqueado(false);
             mostrarError('Aún no tienes nivel para esa invocación.');
-            if (!enEjercicio) reducirVidaJugador(); // ✅ sin daño en tutorial
+            if (!enEjercicio) reducirVidaJugador(); // sin daño en tutorial
 
         } else if (xhr.readyState == 4 && xhr.status == 418) {
             setBloqueado(false);
@@ -86,7 +82,7 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
         } else if (xhr.readyState == 4 && xhr.status == 500) {
             setBloqueado(false);
             mostrarError('Error en la runa de invocación.');
-            if (!enEjercicio) reducirVidaJugador(); // ✅ sin daño en tutorial
+            if (!enEjercicio) reducirVidaJugador(); // sin daño en tutorial
         }
     };
     xhr.send();
@@ -618,4 +614,44 @@ function configurarEnemigo(nivel) {
         img.classList.add('vida-enemigo');
         contenedor.appendChild(img);
     }
+}
+
+function comprobarSolucionTutorial(resultadoJugador) {
+    let dialogoActual = dialogosTutorial[dialogoIndex];
+    let pista = dialogoActual.pista;
+
+    // Ejecutamos la consulta esperada para comparar
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", `/game/consulta/${encodeURIComponent(pista)}`, true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let resultadoEsperado = JSON.parse(xhr.responseText);
+            let jugadorNorm = normalizarResultadoFrontend(resultadoJugador);
+            let esperadoNorm = normalizarResultadoFrontend(resultadoEsperado);
+
+            if (JSON.stringify(jugadorNorm) === JSON.stringify(esperadoNorm)) {
+                // ✅ Correcto: daño al enemigo y desbloqueamos siguiente
+                let btnSiguiente = document.getElementById('tutorial-siguiente');
+                btnSiguiente.disabled = false;
+                btnSiguiente.style.opacity = '1';
+                animarEnemigo();
+            }
+            // Incorrecto: no hacemos nada
+        }
+    };
+    xhr.send();
+}
+
+function normalizarResultadoFrontend(resultado) {
+    if (!Array.isArray(resultado)) return resultado;
+    return resultado
+        .map(fila => {
+            return Object.keys(fila).sort().reduce((obj, key) => {
+                obj[key] = String(fila[key]).toLowerCase().trim();
+                return obj;
+            }, {});
+        })
+        .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
 }
