@@ -32,20 +32,22 @@
             </button>
         </header>
         <main>
-            <form id="formulario">
-                <p>Correo electrónico:</p>
-                <input type="email" id="email" name="email" placeholder="correo@ejemplo.com">
-                <p>Contraseña:</p>
-                <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
-                <div id="opciones-inicio">
-                    <button id="iniciar-sesion">Iniciar sesión</button>
-                    <button id="registrarse">Registrarse</button>
-                </div>
+            <div id="formulario">
+                <form>
+                    <p>Correo electrónico:</p>
+                    <input type="email" id="email" name="email" placeholder="correo@ejemplo.com">
+                    <p>Contraseña:</p>
+                    <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
+                    <div id="opciones-inicio">
+                        <button id="iniciar-sesion">Iniciar sesión</button>
+                        <button id="registrarse">Registrarse</button>
+                    </div>
+                </form>
                 <div id="separador"><p>— o —</p></div>
                 <button id="google-login" onclick="window.location.href='/game/auth/google'">
                     Iniciar sesión con Google
                 </button>
-            </form>
+            </div>
         </main>
         <script>
             document.addEventListener('DOMContentLoaded', () => iniciarAudio('menu'));
