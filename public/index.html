@@ -10,10 +10,14 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Tiny5&display=swap" rel="stylesheet">
         <link rel="icon" type="image/png" href="resources/images/favicon.png">
+        <script src="resources/scripts/audio.js"></script>
     </head>
     <body>
         <header>
             <h1>Nigromante de <br>datos corruptos</h1>
+            <button id="btn-audio" onclick="toggleAudio()">
+                <img id="icono-audio" src="resources/images/nota.png" alt="Música activa" style="width: 2rem;">
+            </button>
         </header>
         <main>
             <div id="text_cont">
@@ -23,5 +27,8 @@
                 <button onclick="window.location.href='inicio_sesion.html'">Comenzar a aprender</button>
             </div>
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => iniciarAudio('menu'));
+        </script>
     </body>
 </html>

@@ -12,6 +12,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Tiny5&display=swap" rel="stylesheet">
         <script src="resources/scripts/dashboard.js" defer></script>
+        <script src="resources/scripts/audio.js"></script>
     </head>
     <body>
         <header>
@@ -20,6 +21,9 @@
                 <span id="admin-nombre"></span>
                 <button id="cerrar-sesion">← Volver al menú</button>
             </div>
+            <button id="btn-audio" onclick="toggleAudio()">
+                <img id="icono-audio" src="resources/images/nota.png" alt="Música activa" style="width: 2rem;">
+            </button>
         </header>
         <main>
             <div id="resumen-cards">
@@ -81,5 +85,8 @@
                 <p id="tabla-info">Mostrando los 10 últimos registros</p>
             </div>
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => iniciarAudio('menu'));
+        </script>
     </body>
 </html>

@@ -130,17 +130,17 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
             console.log('getMisionActual respuesta:', datos); // ← log
 
             if (datos.esTutorial) {
-                console.log('Es tutorial, iniciando...'); // ← log
+                cambiarAudio('tutorial'); // ✅ música de tutorial
                 iniciarTutorial();
                 return;
             }
 
             if (datos.subirNivel) {
-                console.log('Subiendo nivel...'); // ← log
                 subirNivel();
                 return;
             }
 
+            cambiarAudio('batalla');
             misionActual = datos;
             let div = document.getElementById('mision');
             div.innerHTML = `<p>${misionActual.descripcion}</p>`;

@@ -94,3 +94,17 @@ li{
     font-family: "Tiny5", sans-serif;
     font-size: 1rem;
 }
+
+#btn-audio {
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
+    background: transparent;
+    border: none;
+    cursor: url('/images/cursor_hover.png') 16 16, pointer;
+    padding: 0;
+}
+
+#btn-audio img {
+    width: 2rem;
+}

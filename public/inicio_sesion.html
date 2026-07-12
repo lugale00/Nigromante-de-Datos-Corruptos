@@ -12,6 +12,7 @@
         <script src="resources/scripts/inicio.js" defer></script>
         <script src="resources/scripts/wsinvocation_sesion.js"></script>
         <link rel="icon" type="image/png" href="resources/images/favicon.png">
+        <script src="resources/scripts/audio.js"></script>
         <script>
             fetch('/game/sesion', { credentials: 'include' })
                 .then(r => r.json())
@@ -26,6 +27,9 @@
     <body>
         <header>
             <h1>Nigromante de <br>datos corruptos</h1>
+            <button id="btn-audio" onclick="toggleAudio()">
+                <img id="icono-audio" src="resources/images/nota.png" alt="Música activa" style="width: 2rem;">
+            </button>
         </header>
         <main>
             <form id="formulario">
@@ -43,5 +47,8 @@
                 </button>
             </form>
         </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => iniciarAudio('menu'));
+        </script>
     </body>
 </html>
