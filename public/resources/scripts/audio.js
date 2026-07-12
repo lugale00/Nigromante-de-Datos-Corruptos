@@ -11,28 +11,29 @@ let audioActual = null;
 
 function iniciarAudio(tipo) {
     let src = CANCIONES[tipo];
+    let srcGuardado = sessionStorage.getItem('audio_src');
+    let tiempoGuardado = parseFloat(sessionStorage.getItem('audio_time') || 0);
 
-    if (audioActual && audioActual.src.includes(src) && !audioActual.paused) {
-        aplicarSilencio(); // ✅ aplicamos el estado de silencio al cargar la página
+    // ✅ Si ya está sonando la misma canción continuamos desde donde estaba
+    if (audioActual && !audioActual.paused && audioActual.src.endsWith(encodeURIComponent(src).replace(/%2F/g, '/'))) {
+        aplicarSilencio();
         return;
     }
 
+    // Si hay otra canción sonando la paramos
     if (audioActual) {
-        sessionStorage.setItem('audio_src', '');
         audioActual.pause();
         audioActual = null;
     }
 
-    let tiempoGuardado = 0;
-    let srcGuardado = sessionStorage.getItem('audio_src');
-    if (srcGuardado && srcGuardado === src) {
-        tiempoGuardado = parseFloat(sessionStorage.getItem('audio_time') || 0);
-    }
-
     audioActual = new Audio(src);
     audioActual.loop = true;
-    audioActual.volume = silenciado ? 0 : 0.4; // ✅ respetamos el estado de silencio
-    audioActual.currentTime = tiempoGuardado;
+    audioActual.volume = silenciado ? 0 : 0.4;
+
+    // ✅ Si es la misma canción que antes continuamos desde donde estaba
+    if (srcGuardado === src && tiempoGuardado > 0) {
+        audioActual.currentTime = tiempoGuardado;
+    }
 
     audioActual.play().catch(() => {
         document.addEventListener('click', function iniciarConClick() {
@@ -48,7 +49,7 @@ function iniciarAudio(tipo) {
         }
     }, 1000);
 
-    aplicarSilencio(); // ✅ aplicamos el icono correcto al cargar
+    aplicarSilencio();
 }
 
 function cambiarAudio(tipo) {
