@@ -132,3 +132,17 @@ function nuevoJuego() {
         xhr.send();
     });
 }
+
+function cerrarSesion() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/user/logout", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            sessionStorage.clear(); // ✅ limpiamos también el audio
+            window.location.href = 'index.html';
+        }
+    };
+    xhr.send();
+}

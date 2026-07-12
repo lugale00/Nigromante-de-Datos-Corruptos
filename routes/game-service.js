@@ -533,4 +533,14 @@ game.prototype.avanzarTutorial = async function (req, res) {
     res.status(200).json({ ok: true });
 };
 
+game.prototype.cerrarSesion = async function (req, res) {
+    req.session.destroy(function(err) {
+        if (err) {
+            return res.status(500).json({ error: 'Error al cerrar sesión' });
+        }
+        res.clearCookie('connect.sid');
+        res.status(200).json({ mensaje: 'Sesión cerrada' });
+    });
+};
+
 module.exports = new game();

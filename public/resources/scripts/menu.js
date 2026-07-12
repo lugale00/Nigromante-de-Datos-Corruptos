@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    let cerrarSesionBtn = document.getElementById('cerrar-sesion');
+    cerrarSesionBtn.addEventListener('click', function() {
+        cerrarSesion();
+    });
+
     let dashboardBtn = document.getElementById('dashboard');
     dashboardBtn.addEventListener('click', function() {
         document.location.href = 'dashboard.html';
