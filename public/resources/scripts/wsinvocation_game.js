@@ -261,6 +261,15 @@ function reducirVidaJugador() { // función para reducir la vida del jugador y c
         rgba(46, 169, 46, 0.65) ${nuevaVida}%, 
         rgba(255, 0, 0, 0.65) ${nuevaVida}%)`;
 
+    // Animación de daño del nigromante
+    nigromante.src = 'resources/images/nigromante_damage.png';
+    nigromante.classList.add('nigromante-dañado');
+    
+    setTimeout(() => {
+        nigromante.src = 'resources/images/nigromante.png';
+        nigromante.classList.remove('nigromante-dañado');
+    }, 600);
+
     if (nuevaVida === 0) {
         setTimeout(() => jugadorMuerto(), 500);
     }
