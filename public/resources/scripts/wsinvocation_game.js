@@ -252,6 +252,7 @@ function reducirVidaEnemigo() { // función para reducir la vida del enemigo y c
 
 function reducirVidaJugador() { // función para reducir la vida del jugador y comprobar si ha muerto
     let vidaEl = document.getElementById('jugador-vida');
+    let nigromante = document.getElementById('jugador-img');
     let vidaActual = parseInt(vidaEl.textContent.replace('Vida: ', ''));
     let nuevaVida = Math.max(0, vidaActual - 20);
     vidaEl.textContent = `Vida: ${nuevaVida}`;
