@@ -397,9 +397,10 @@ li{
 }
 
 #tutorial-botones {
-    display: flex;
-    justify-content: flex-end;
     position: absolute;
+    bottom:0;
+    right: 0;
+    display: flex;
 }
 
 /* Ejercicio en tutorial */
