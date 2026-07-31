@@ -21,6 +21,7 @@ router.post('/subirNivel', gameService.subirNivel);
 router.post('/nuevoJuego', gameService.nuevoJuego);
 router.post('/tutorial/avanzar', gameService.avanzarTutorial);
 router.post('/user/logout', gameService.cerrarSesion);
+router.post('/vida', gameService.actualizarVida);
 
 //Operaciones admin
 router.get('/admin/verificar', gameService.verificarAdmin);

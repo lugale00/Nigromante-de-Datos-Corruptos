@@ -65,6 +65,7 @@ function cargarUsuarioHeader() {
 
             cambiarEnemigo(sesion.nivel);
             configurarEnemigo(sesion.nivel); // ✅ configuramos los corazones
+            aplicarVida(sesion.vida || 100);
         }
     };
     xhr.send();
