@@ -674,12 +674,10 @@ function comprobarSolucionTutorial(resultadoJugador) {
 
 function normalizarResultadoFrontend(resultado) {
     if (!Array.isArray(resultado)) return resultado;
-    return resultado
-        .map(fila => {
-            return Object.keys(fila).sort().reduce((obj, key) => {
+    return resultado.map(fila => {
+            return Object.keys(fila).reduce((obj, key) => {
                 obj[key] = String(fila[key]).toLowerCase().trim();
                 return obj;
             }, {});
         })
-        .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
 }
