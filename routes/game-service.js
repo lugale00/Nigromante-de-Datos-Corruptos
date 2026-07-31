@@ -256,9 +256,7 @@ game.prototype.comprobarSolucion = async function (req, res) {
         if (!mision) return res.status(404).json({ error: 'Misión no encontrada' });
 
         const resultadoEsperado = mision.respuesta;
-        const resultadoJugadorNorm = normalizarResultado(resultadoJugador);
-        const resultadoEsperadoNorm = normalizarResultado(resultadoEsperado);
-        const correcto = JSON.stringify(resultadoJugadorNorm) === JSON.stringify(resultadoEsperadoNorm);
+        const correcto = JSON.stringify(resultadoJugador) === JSON.stringify(resultadoEsperado);
 
         // ✅ Guardamos el intento
         const usuarioResult = await db.query(
@@ -281,18 +279,6 @@ game.prototype.comprobarSolucion = async function (req, res) {
         res.status(500).json({ error: 'Error al comprobar solución' });
     }
 };
-
-function normalizarResultado(resultado) {
-    if (!Array.isArray(resultado)) return resultado;
-    return resultado
-        .map(fila => {
-            return Object.keys(fila).sort().reduce((obj, key) => {
-                obj[key] = String(fila[key]).toLowerCase().trim();
-                return obj;
-            }, {});
-        })
-        .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
-}
 
 game.prototype.nuevoJuego = async function (req, res) {
     const nivelUsuario = req.session.nivelUsuario;
