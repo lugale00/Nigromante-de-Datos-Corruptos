@@ -221,14 +221,15 @@ game.prototype.subirNivel = async function (req, res) {
 
     try {
         const nuevoNivel = nivelUsuario + 1;
+        const vidaActual = req.session.vida || 100; // ✅ cogemos la vida de la sesión
 
         await db.query(
-            'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1) WHERE nombre = $2',
-            [nuevoNivel, req.session.nombre]
+            'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1), vida = $2 WHERE nombre = $3',
+            [nuevoNivel, vidaActual, req.session.nombre]
         );
 
         req.session.nivelUsuario = nuevoNivel;
-        req.session.dialogoActual = 0; // ✅ reseteamos el progreso del tutorial
+        req.session.dialogoActual = 0;
 
         res.status(200).json({ nuevoNivel });
 

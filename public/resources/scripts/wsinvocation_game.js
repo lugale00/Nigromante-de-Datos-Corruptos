@@ -151,36 +151,46 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
 
 let subiendoNivel = false;
 
-game.prototype.subirNivel = async function (req, res) {
-    const nivelUsuario = req.session.nivelUsuario;
+function subirNivel() {
+    if (subiendoNivel) return;
+    subiendoNivel = true;
 
-    if (!nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
-    }
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/subirNivel", true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-    if (nivelUsuario >= 5) {
-        return res.status(200).json({ nivelMaximo: true });
-    }
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let datos = JSON.parse(xhr.responseText);
 
-    try {
-        const nuevoNivel = nivelUsuario + 1;
-        const vidaActual = req.session.vida || 100; // ✅ cogemos la vida de la sesión
+            if (datos.nivelMaximo) {
+                mostrarExito('¡Has completado el juego! Eres el maestro nigromante.');
+                cambiarEnemigo(5);
+                subiendoNivel = false;
+                return;
+            }
 
-        await db.query(
-            'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1), vida = $2 WHERE nombre = $3',
-            [nuevoNivel, vidaActual, req.session.nombre]
-        );
+            mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
+            cambiarEnemigo(datos.nuevoNivel);
+            configurarEnemigo(datos.nuevoNivel);
 
-        req.session.nivelUsuario = nuevoNivel;
-        req.session.dialogoActual = 0;
+            // ✅ Siempre restauramos la opacidad al subir de nivel
+            document.querySelector('.enemigo').style.opacity = '1';
+            document.querySelector('.enemigo').style.transition = '';
 
-        res.status(200).json({ nuevoNivel });
+            let nivelEl = document.getElementById('usuario-nivel');
+            if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al subir de nivel' });
-    }
-};
+            setTimeout(() => {
+                subiendoNivel = false;
+                getTablasDisponibles();
+                getMisionActual();
+            }, 2000);
+        }
+    };
+    xhr.send();
+}
 
 function mostrarError(mensaje) { // función para mostrar mensajes de error en la interfaz
     let contenedor = document.getElementById('feedback-container');
