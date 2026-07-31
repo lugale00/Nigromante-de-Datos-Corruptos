@@ -151,46 +151,36 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
 
 let subiendoNivel = false;
 
-function subirNivel() {
-    if (subiendoNivel) return;
-    subiendoNivel = true;
+game.prototype.subirNivel = async function (req, res) {
+    const nivelUsuario = req.session.nivelUsuario;
 
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/game/subirNivel", true);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader("Content-Type", "application/json");
+    if (!nivelUsuario) {
+        return res.status(401).json({ error: 'No has iniciado sesión' });
+    }
 
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            let datos = JSON.parse(xhr.responseText);
+    if (nivelUsuario >= 5) {
+        return res.status(200).json({ nivelMaximo: true });
+    }
 
-            if (datos.nivelMaximo) {
-                mostrarExito('¡Has completado el juego! Eres el maestro nigromante.');
-                cambiarEnemigo(5);
-                subiendoNivel = false;
-                return;
-            }
+    try {
+        const nuevoNivel = nivelUsuario + 1;
+        const vidaActual = req.session.vida || 100; // ✅ cogemos la vida de la sesión
 
-            mostrarExito(`¡Nivel ${datos.nuevoNivel} desbloqueado! Nuevas tablas disponibles.`);
-            cambiarEnemigo(datos.nuevoNivel);
-            configurarEnemigo(datos.nuevoNivel);
+        await db.query(
+            'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1), vida = $2 WHERE nombre = $3',
+            [nuevoNivel, vidaActual, req.session.nombre]
+        );
 
-            // ✅ Siempre restauramos la opacidad al subir de nivel
-            document.querySelector('.enemigo').style.opacity = '1';
-            document.querySelector('.enemigo').style.transition = '';
+        req.session.nivelUsuario = nuevoNivel;
+        req.session.dialogoActual = 0;
 
-            let nivelEl = document.getElementById('usuario-nivel');
-            if (nivelEl) nivelEl.textContent = `Nivel ${datos.nuevoNivel}`;
+        res.status(200).json({ nuevoNivel });
 
-            setTimeout(() => {
-                subiendoNivel = false;
-                getTablasDisponibles();
-                getMisionActual();
-            }, 2000);
-        }
-    };
-    xhr.send();
-}
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al subir de nivel' });
+    }
+};
 
 function mostrarError(mensaje) { // función para mostrar mensajes de error en la interfaz
     let contenedor = document.getElementById('feedback-container');
@@ -250,22 +240,32 @@ function reducirVidaEnemigo() { // función para reducir la vida del enemigo y c
     }
 }
 
-function reducirVidaJugador() { // función para reducir la vida del jugador y comprobar si ha muerto
+function aplicarVida(vida) {
+    let vidaEl = document.getElementById('jugador-vida');
+    if (!vidaEl) return;
+    vidaEl.textContent = `Vida: ${vida}`;
+    vidaEl.style.background = `linear-gradient(to right, 
+        rgba(46, 169, 46, 0.65) ${vida}%, 
+        rgba(255, 0, 0, 0.65) ${vida}%)`;
+}
+
+function reducirVidaJugador() {
     let vidaEl = document.getElementById('jugador-vida');
     let nigromante = document.getElementById('jugador-img');
     let vidaActual = parseInt(vidaEl.textContent.replace('Vida: ', ''));
     let nuevaVida = Math.max(0, vidaActual - 20);
-    vidaEl.textContent = `Vida: ${nuevaVida}`;
 
-    // Actualizamos el color de fondo de la barra de vida
-    vidaEl.style.background = `linear-gradient(to right, 
-        rgba(46, 169, 46, 0.65) ${nuevaVida}%, 
-        rgba(255, 0, 0, 0.65) ${nuevaVida}%)`;
+    aplicarVida(nuevaVida);
 
-    // Animación de daño del nigromante
+    // ✅ Solo actualizamos la sesión, no la BD
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/vida", true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({ vida: nuevaVida }));
+
     nigromante.src = 'resources/images/nigromante_damage.png';
     nigromante.classList.add('nigromante-dañado');
-    
     setTimeout(() => {
         nigromante.src = 'resources/images/nigromante.png';
         nigromante.classList.remove('nigromante-dañado');
