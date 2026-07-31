@@ -355,7 +355,7 @@ function siguienteMision() { // función para pasar a la siguiente misión tras 
         return;
     }
 
-    // ✅ Solo en niveles normales restauramos el enemigo
+    //  Solo en niveles normales restauramos el enemigo
     document.querySelector('.enemigo').style.opacity = '1';
     document.querySelector('.enemigo').style.transition = '';
     document.querySelectorAll('.vida-enemigo').forEach(c => {
@@ -656,10 +656,8 @@ function comprobarSolucionTutorial(resultadoJugador) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let resultadoEsperado = JSON.parse(xhr.responseText);
-            let jugadorNorm = normalizarResultadoFrontend(resultadoJugador);
-            let esperadoNorm = normalizarResultadoFrontend(resultadoEsperado);
 
-            if (JSON.stringify(jugadorNorm) === JSON.stringify(esperadoNorm)) {
+            if (JSON.stringify(resultadoJugador) === JSON.stringify(resultadoEsperado)) {
                 // ✅ Correcto: daño al enemigo y desbloqueamos siguiente
                 let btnSiguiente = document.getElementById('tutorial-siguiente');
                 btnSiguiente.disabled = false;
@@ -670,14 +668,4 @@ function comprobarSolucionTutorial(resultadoJugador) {
         }
     };
     xhr.send();
-}
-
-function normalizarResultadoFrontend(resultado) {
-    if (!Array.isArray(resultado)) return resultado;
-    return resultado.map(fila => {
-            return Object.keys(fila).reduce((obj, key) => {
-                obj[key] = String(fila[key]).toLowerCase().trim();
-                return obj;
-            }, {});
-        })
 }
