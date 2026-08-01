@@ -269,6 +269,13 @@ function reducirVidaJugador() {
 
     aplicarVida(nuevaVida);
 
+    // ✅ Solo actualizamos la sesión del servidor, no la BD
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/game/vida", true);
+    xhr.withCredentials = true;
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify({ vida: nuevaVida }));
+
     nigromante.src = 'resources/images/nigromante_damage.png';
     nigromante.classList.add('nigromante-dañado');
     setTimeout(() => {

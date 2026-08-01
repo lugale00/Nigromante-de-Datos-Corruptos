@@ -222,6 +222,7 @@ game.prototype.subirNivel = async function (req, res) {
     try {
         const nuevoNivel = nivelUsuario + 1;
         const vidaActual = req.session.vida || 100; // ✅ cogemos la vida de la sesión
+        console.log('subirNivel - vida en sesión:', vidaActual); // ← log temporal
 
         await db.query(
             'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1), vida = $2 WHERE nombre = $3',
