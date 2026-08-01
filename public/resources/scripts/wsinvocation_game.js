@@ -63,6 +63,7 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
             setBloqueado(false);
 
             if (misionActual) {
+                console.log('misionActual:', misionActual); // ← log temporal
                 comprobarSolucion(resultado);
             }
 
