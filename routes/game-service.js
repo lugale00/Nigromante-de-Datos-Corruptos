@@ -240,6 +240,9 @@ game.prototype.subirNivel = async function (req, res) {
 };
 
 game.prototype.comprobarSolucion = async function (req, res) {
+    const { idMision, resultadoJugador } = req.body;
+    console.log('idMision:', idMision);
+    console.log('resultadoJugador:', JSON.stringify(resultadoJugador));
     const nivelUsuario = req.session.nivelUsuario;
     if (!nivelUsuario) {
         return res.status(401).json({ error: 'No has iniciado sesión' });
