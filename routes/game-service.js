@@ -239,16 +239,23 @@ game.prototype.subirNivel = async function (req, res) {
     }
 };
 
+function normalizarResultado(resultado) {
+    if (!Array.isArray(resultado)) return resultado;
+    return resultado.map(fila => {
+        return Object.keys(fila).sort().reduce((obj, key) => {
+            obj[key] = String(fila[key]).trim();
+            return obj;
+        }, {});
+    });
+}
+
 game.prototype.comprobarSolucion = async function (req, res) {
-    console.log('comprobarSolucion llamada'); // ← primera línea
     const nivelUsuario = req.session.nivelUsuario;
     if (!nivelUsuario) {
         return res.status(401).json({ error: 'No has iniciado sesión' });
     }
 
     const { idMision, resultadoJugador } = req.body;
-    console.log('idMision:', idMision);
-    console.log('resultadoJugador:', JSON.stringify(resultadoJugador));
 
     try {
         const misionResult = await db.query(
@@ -259,22 +266,24 @@ game.prototype.comprobarSolucion = async function (req, res) {
         if (!mision) return res.status(404).json({ error: 'Misión no encontrada' });
 
         const resultadoEsperado = mision.respuesta;
-        console.log('Jugador:', JSON.stringify(resultadoJugador));
-        console.log('Esperado:', JSON.stringify(resultadoEsperado));
-        const correcto = JSON.stringify(resultadoJugador) === JSON.stringify(resultadoEsperado);
+        const jugadorNorm = normalizarResultado(resultadoJugador);
+        const esperadoNorm = normalizarResultado(resultadoEsperado);
 
-        // Guardamos el intento
-        const usuarioResult = await db.query(
-            'SELECT id FROM public.usuarios WHERE nombre = $1',
-            [req.session.nombre]
-        );
-        const idUsuario = usuarioResult.rows[0]?.id;
+        const correcto = JSON.stringify(jugadorNorm) === JSON.stringify(esperadoNorm);
 
-        if (idUsuario) {
-            await db.query(
-                'INSERT INTO public.intentos (id_usuario, id_mision, correcto) VALUES ($1, $2, $3)',
-                [idUsuario, idMision, correcto]
+        // Guardamos el intento si es estudiante
+        if (req.session.rol !== 'admin') {
+            const usuarioResult = await db.query(
+                'SELECT id FROM public.usuarios WHERE nombre = $1',
+                [req.session.nombre]
             );
+            const idUsuario = usuarioResult.rows[0]?.id;
+            if (idUsuario) {
+                await db.query(
+                    'INSERT INTO public.intentos (id_usuario, id_mision, correcto) VALUES ($1, $2, $3)',
+                    [idUsuario, idMision, correcto]
+                );
+            }
         }
 
         res.status(200).json({ correcto });

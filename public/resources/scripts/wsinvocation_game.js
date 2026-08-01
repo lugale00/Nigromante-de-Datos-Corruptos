@@ -646,11 +646,20 @@ function configurarEnemigo(nivel) {
     }
 }
 
+function normalizarResultadoFrontend(resultado) {
+    if (!Array.isArray(resultado)) return resultado;
+    return resultado.map(fila => {
+        return Object.keys(fila).sort().reduce((obj, key) => {
+            obj[key] = String(fila[key]).trim();
+            return obj;
+        }, {});
+    });
+}
+
 function comprobarSolucionTutorial(resultadoJugador) {
     let dialogoActual = dialogosTutorial[dialogoIndex];
     let pista = dialogoActual.pista;
 
-    // Ejecutamos la consulta esperada para comparar
     let xhr = new XMLHttpRequest();
     xhr.open("GET", `/game/consulta/${encodeURIComponent(pista)}`, true);
     xhr.withCredentials = true;
@@ -658,15 +667,15 @@ function comprobarSolucionTutorial(resultadoJugador) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let resultadoEsperado = JSON.parse(xhr.responseText);
+            let jugadorNorm = normalizarResultadoFrontend(resultadoJugador);
+            let esperadoNorm = normalizarResultadoFrontend(resultadoEsperado);
 
-            if (JSON.stringify(resultadoJugador) === JSON.stringify(resultadoEsperado)) {
-                // ✅ Correcto: daño al enemigo y desbloqueamos siguiente
+            if (JSON.stringify(jugadorNorm) === JSON.stringify(esperadoNorm)) {
                 let btnSiguiente = document.getElementById('tutorial-siguiente');
                 btnSiguiente.disabled = false;
                 btnSiguiente.style.opacity = '1';
                 animarEnemigo();
             }
-            // Incorrecto: no hacemos nada
         }
     };
     xhr.send();
