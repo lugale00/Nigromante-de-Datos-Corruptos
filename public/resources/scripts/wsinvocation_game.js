@@ -91,6 +91,7 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
 
 function comprobarSolucion(resultadoJugador) { // función para enviar la solución del jugador al servidor y comprobarla
     if (!misionActual) return; // evitamos enviar si no hay misión activa
+    console.log('Enviando a comprobar, idMision:', misionActual.id); // ← log
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/game/comprobar", true);
     xhr.withCredentials = true;
