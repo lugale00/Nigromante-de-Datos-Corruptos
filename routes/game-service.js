@@ -256,6 +256,8 @@ game.prototype.comprobarSolucion = async function (req, res) {
         if (!mision) return res.status(404).json({ error: 'Misión no encontrada' });
 
         const resultadoEsperado = mision.respuesta;
+        console.log('Jugador:', JSON.stringify(resultadoJugador));
+        console.log('Esperado:', JSON.stringify(resultadoEsperado));
         const correcto = JSON.stringify(resultadoJugador) === JSON.stringify(resultadoEsperado);
 
         // Guardamos el intento
