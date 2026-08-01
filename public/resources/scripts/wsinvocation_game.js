@@ -63,7 +63,6 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
             setBloqueado(false);
 
             if (misionActual) {
-                console.log('misionActual:', misionActual); // ← log temporal
                 comprobarSolucion(resultado);
             }
 
@@ -91,7 +90,6 @@ function getConsulta(sentencia) { // función principal para enviar la consulta 
 
 function comprobarSolucion(resultadoJugador) { // función para enviar la solución del jugador al servidor y comprobarla
     if (!misionActual) return; // evitamos enviar si no hay misión activa
-    console.log('Enviando a comprobar, idMision:', misionActual.id); // ← log
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/game/comprobar", true);
     xhr.withCredentials = true;
@@ -119,7 +117,6 @@ function comprobarSolucion(resultadoJugador) { // función para enviar la soluci
 }
 
 function getMisionActual(idMisionActual = null) { // función para obtener la misión actual del jugador desde el servidor
-    console.log('getMisionActual llamada desde:', new Error().stack); // ← log
     let xhr = new XMLHttpRequest();
     let url = `/game/mision`;
     if (idMisionActual) url += `?idMisionActual=${idMisionActual}`;
@@ -129,7 +126,6 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let datos = JSON.parse(xhr.responseText);
-            console.log('getMisionActual respuesta:', datos); // ← log
 
             if (datos.esTutorial) {
                 cambiarAudio('tutorial'); // ✅ música de tutorial
@@ -157,6 +153,9 @@ function subirNivel() {
     if (subiendoNivel) return;
     subiendoNivel = true;
 
+    let vidaEl = document.getElementById('jugador-vida');
+    let vidaActual = vidaEl ? parseInt(vidaEl.textContent.replace('Vida: ', '')) : 100;
+
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/game/subirNivel", true);
     xhr.withCredentials = true;
@@ -177,7 +176,6 @@ function subirNivel() {
             cambiarEnemigo(datos.nuevoNivel);
             configurarEnemigo(datos.nuevoNivel);
 
-            // ✅ Siempre restauramos la opacidad al subir de nivel
             document.querySelector('.enemigo').style.opacity = '1';
             document.querySelector('.enemigo').style.transition = '';
 
@@ -191,7 +189,9 @@ function subirNivel() {
             }, 2000);
         }
     };
-    xhr.send();
+
+    // ✅ Enviamos la vida actual al backend
+    xhr.send(JSON.stringify({ vida: vidaActual }));
 }
 
 function mostrarError(mensaje) { // función para mostrar mensajes de error en la interfaz
@@ -268,14 +268,7 @@ function reducirVidaJugador() {
     let nuevaVida = Math.max(0, vidaActual - 20);
 
     aplicarVida(nuevaVida);
-
-    // ✅ Solo actualizamos la sesión del servidor, no la BD
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/game/vida", true);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify({ vida: nuevaVida }));
-
+    
     nigromante.src = 'resources/images/nigromante_damage.png';
     nigromante.classList.add('nigromante-dañado');
     setTimeout(() => {

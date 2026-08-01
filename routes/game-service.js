@@ -102,7 +102,6 @@ game.prototype.login = async function (req, res) {
         req.session.nivelUsuario = usuario.nivel_actual;
         req.session.nombre = usuario.nombre;
         req.session.rol = usuario.rol || 'estudiante';
-        req.session.vida = usuario.vida || 100;
 
         res.status(200).json({ mensaje: 'Login correcto' });
 
@@ -116,12 +115,24 @@ game.prototype.getSesion = async function (req, res) {
     if (!req.session.nivelUsuario) {
         return res.status(401).json({ error: 'No has iniciado sesión' });
     }
-    res.status(200).json({
-        nombre: req.session.nombre,
-        nivel: req.session.nivelUsuario,
-        rol: req.session.rol || 'estudiante', // añadimos el rol
-        vida: req.session.vida || 100 // añadimos la vida
-    });
+
+    try {
+        const result = await db.query(
+            'SELECT vida FROM public.usuarios WHERE nombre = $1',
+            [req.session.nombre]
+        );
+        const vida = result.rows[0]?.vida || 100;
+
+        res.status(200).json({
+            nombre: req.session.nombre,
+            nivel: req.session.nivelUsuario,
+            rol: req.session.rol || 'estudiante',
+            vida: vida // ✅ vida de la BD
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener sesión' });
+    }
 };
 
 game.prototype.registrar = async function (req, res) {
@@ -221,8 +232,7 @@ game.prototype.subirNivel = async function (req, res) {
 
     try {
         const nuevoNivel = nivelUsuario + 1;
-        const vidaActual = req.session.vida || 100; // ✅ cogemos la vida de la sesión
-        console.log('subirNivel - vida en sesión:', vidaActual); // ← log temporal
+        const vidaActual = req.body.vida || 100; // ✅ vida viene del frontend
 
         await db.query(
             'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1), vida = $2 WHERE nombre = $3',
@@ -309,7 +319,6 @@ game.prototype.nuevoJuego = async function (req, res) {
         );
 
         req.session.nivelUsuario = 1;
-        req.session.vida = 100;
         res.status(200).json({ mensaje: 'Juego reiniciado' });
 
     } catch (error) {
@@ -546,15 +555,6 @@ game.prototype.cerrarSesion = async function (req, res) {
         res.clearCookie('connect.sid');
         res.status(200).json({ mensaje: 'Sesión cerrada' });
     });
-};
-
-// En game-service.js añadimos una función para actualizar la vida
-game.prototype.actualizarVida = async function (req, res) {
-    if (!req.session.nivelUsuario) {
-        return res.status(401).json({ error: 'No has iniciado sesión' });
-    }
-    req.session.vida = req.body.vida; // ✅ solo sesión, no BD
-    res.status(200).json({ ok: true });
 };
 
 module.exports = new game();
