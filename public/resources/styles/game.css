@@ -380,7 +380,7 @@ li{
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 0.5rem;
     padding: 1rem 1.5rem;
-    min-height: 4rem;
+    height: 4rem;
 }
 
 #tutorial-fantasma-nombre {
