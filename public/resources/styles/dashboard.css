@@ -78,7 +78,7 @@ header {
     background-size: 100% 100%;
     padding: 2rem;
     text-align: center;
-    max-height: fit-content;
+    min-height: fit-content;
 }
 
 .grafica-container h2 {

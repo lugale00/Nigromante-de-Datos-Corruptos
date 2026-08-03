@@ -43,10 +43,12 @@ game.prototype.getConsulta = async function (req, res) {
     let consulta = req.params.consulta;
     const consultaLower = consulta.toLowerCase();
 
+    // Capa 1: bloqueamos acceso expl í cito a esquemas
     if (consultaLower.includes('public') || consultaLower.includes('datos.')) {
         return res.status(418).json({ error: 'Acceso no permitido a ese esquema' });
     }
 
+    // Capa 2: bloqueamos tablas de niveles superiores
     const todasLasTablas = ['almas', 'lugar', 'armamento'];
     const accesoNoPermitido = todasLasTablas.some(tabla =>
         consultaLower.includes(tabla) && !vistasNivel[tabla]
@@ -56,6 +58,7 @@ game.prototype.getConsulta = async function (req, res) {
         return res.status(403).json({ error: 'No tienes acceso a esas tablas aún' });
     }
 
+    // Capa 3: sustituimos tablas por vistas del nivel actual
     for (const [tabla, vista] of Object.entries(vistasNivel)) {
     // Solo sustituimos cuando la tabla aparece después de FROM o JOIN
         const regex = new RegExp(`(FROM|JOIN)\\s+\\b${tabla}\\b`, 'gi');

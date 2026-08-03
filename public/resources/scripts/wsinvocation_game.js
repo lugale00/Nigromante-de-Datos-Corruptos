@@ -579,7 +579,7 @@ function mostrarDialogo(index) {
         // Bloqueamos el área de escritura en diálogos
         setBloqueado(true);
 
-         // ✅ Restauramos el placeholder por defecto
+         // Restauramos el placeholder por defecto
         document.getElementById('sentencia').placeholder = 'Escribe tu sentencia SQL aquí...';
     }
 
@@ -598,7 +598,7 @@ function guardarProgresoTutorial(index) {
 let tutorialFinalizado = false;
 
 function finalizarTutorial() {
-    if (tutorialFinalizado) return; // ✅ evitamos doble llamada
+    if (tutorialFinalizado) return; // evitamos doble llamada
     tutorialFinalizado = true;
 
     document.getElementById('tutorial-overlay').classList.remove('activo');
