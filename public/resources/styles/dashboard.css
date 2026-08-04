@@ -83,7 +83,7 @@ header {
 }
 
 .grafica-container canvas {
-    height: 35rem !important; /*altura fija forzada */
+    height: 32.5rem !important; /*altura fija forzada */
     width: 100% !important;
 }
 
