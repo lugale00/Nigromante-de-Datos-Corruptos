@@ -256,6 +256,7 @@ function renderizarGraficaMisiones(misiones) {
             }]
         },
         options: {
+            maintainAspectRatio: false, 
             scales: {
                 y: { min: 0, max: 100, ticks: { font: { family: 'Tiny5' } } },
                 x: { ticks: { font: { family: 'Tiny5' }, maxRotation: 45 } }
