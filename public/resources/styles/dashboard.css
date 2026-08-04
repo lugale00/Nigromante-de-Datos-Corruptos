@@ -78,7 +78,13 @@ header {
     background-size: 100% 100%;
     padding: 2rem;
     text-align: center;
-    min-height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.grafica-container canvas {
+    height: 10rem !important; /*altura fija forzada */
+    width: 100% !important;
 }
 
 .grafica-container h2 {

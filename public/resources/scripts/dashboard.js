@@ -298,6 +298,7 @@ function renderizarGraficaActividad(dias) {
             ]
         },
         options: {
+            maintainAspectRatio: false, 
             scales: {
                 x: { ticks: { font: { family: 'Tiny5' }, maxRotation: 45 } },
                 y: { ticks: { font: { family: 'Tiny5' } } }
