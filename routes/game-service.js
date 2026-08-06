@@ -620,6 +620,9 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
                 <p>Este código expira en 15 minutos.</p>
                 <p>Si no has solicitado este código, ignora este correo.</p>
             `
+            }).catch(err => {
+            console.error('Error al enviar email:', err);
+            throw err;
         });
 
         res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
