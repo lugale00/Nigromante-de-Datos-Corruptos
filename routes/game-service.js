@@ -572,13 +572,17 @@ const transporter = nodemailer.createTransport({
 
 // Solicitar código de recuperación
 game.prototype.solicitarRecuperacion = async function (req, res) {
+    console.log('solicitarRecuperacion llamada'); // ← log 1
     const { email } = req.body;
+    console.log('email recibido:', email); // ← log 2
 
     try {
+        console.log('buscando usuario...'); // ← log 3
         const result = await db.query(
             'SELECT * FROM public.usuarios WHERE email = $1',
             [email]
         );
+        console.log('usuario encontrado:', result.rows.length); // ← log 4
 
         if (result.rows.length === 0) {
             // No revelamos si el email existe por seguridad
