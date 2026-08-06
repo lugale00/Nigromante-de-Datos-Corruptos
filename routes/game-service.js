@@ -560,4 +560,117 @@ game.prototype.cerrarSesion = async function (req, res) {
     });
 };
 
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
+    }
+});
+
+// Solicitar código de recuperación
+game.prototype.solicitarRecuperacion = async function (req, res) {
+    const { email } = req.body;
+
+    try {
+        const result = await db.query(
+            'SELECT * FROM public.usuarios WHERE email = $1',
+            [email]
+        );
+
+        if (result.rows.length === 0) {
+            // No revelamos si el email existe por seguridad
+            return res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
+        }
+
+        const usuario = result.rows[0];
+
+        // No permitimos recuperación para cuentas Google
+        if (usuario.contrasena === 'google_auth') {
+            return res.status(400).json({ error: 'Esta cuenta usa Google para autenticarse.' });
+        }
+
+        // Generamos código de 6 dígitos
+        const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiracion = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+
+        // Invalidamos códigos anteriores del mismo email
+        await db.query(
+            'UPDATE public.tokens_recuperacion SET usado = true WHERE email = $1',
+            [email]
+        );
+
+        // Guardamos el nuevo código
+        await db.query(
+            'INSERT INTO public.tokens_recuperacion (email, codigo, expiracion) VALUES ($1, $2, $3)',
+            [email, codigo, expiracion]
+        );
+
+        // Enviamos el email
+        await transporter.sendMail({
+            from: `"Nigromante de Datos Corruptos" <${process.env.GMAIL_USER}>`,
+            to: email,
+            subject: 'Código de recuperación de contraseña',
+            html: `
+                <h2>Recuperación de contraseña</h2>
+                <p>Tu código de verificación es:</p>
+                <h1 style="letter-spacing: 0.5rem; color: #6b3fa0;">${codigo}</h1>
+                <p>Este código expira en 15 minutos.</p>
+                <p>Si no has solicitado este código, ignora este correo.</p>
+            `
+        });
+
+        res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al enviar el código.' });
+    }
+};
+
+// Verificar código y cambiar contraseña
+game.prototype.verificarRecuperacion = async function (req, res) {
+    const { email, codigo, nuevaContrasena } = req.body;
+
+    try {
+        const result = await db.query(
+            `SELECT * FROM public.tokens_recuperacion 
+            WHERE email = $1 AND codigo = $2 AND usado = false 
+            AND expiracion > NOW()
+            ORDER BY id DESC LIMIT 1`,
+            [email, codigo]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ error: 'Código incorrecto o expirado.' });
+        }
+
+        // Validamos la nueva contraseña
+        if (nuevaContrasena.length < 6) {
+            return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
+        }
+
+        // Actualizamos la contraseña
+        const hash = await bcrypt.hash(nuevaContrasena, 10);
+        await db.query(
+            'UPDATE public.usuarios SET contrasena = $1 WHERE email = $2',
+            [hash, email]
+        );
+
+        // Marcamos el token como usado
+        await db.query(
+            'UPDATE public.tokens_recuperacion SET usado = true WHERE id = $1',
+            [result.rows[0].id]
+        );
+
+        res.status(200).json({ mensaje: 'Contraseña actualizada correctamente.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al verificar el código.' });
+    }
+};
+
 module.exports = new game();

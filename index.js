@@ -33,7 +33,7 @@ app.use(session({
     }
 }));
 
-// ✅ Passport
+// Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
