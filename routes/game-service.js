@@ -563,10 +563,7 @@ game.prototype.cerrarSesion = async function (req, res) {
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    family: 4,
+    service: 'gmail',
     auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_PASS
