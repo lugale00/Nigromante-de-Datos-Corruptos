@@ -560,20 +560,8 @@ game.prototype.cerrarSesion = async function (req, res) {
     });
 };
 
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
-    },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000
-});
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Solicitar código de recuperación
 game.prototype.solicitarRecuperacion = async function (req, res) {
@@ -618,8 +606,8 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
         );
 
         // Enviamos el email
-        await transporter.sendMail({
-            from: `"Nigromante de Datos Corruptos" <${process.env.GMAIL_USER}>`,
+        const { error: resendError } = await resend.emails.send({
+            from: 'Nigromante de Datos Corruptos <onboarding@resend.dev>',
             to: email,
             subject: 'Código de recuperación de contraseña',
             html: `
@@ -629,10 +617,12 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
                 <p>Este código expira en 15 minutos.</p>
                 <p>Si no has solicitado este código, ignora este correo.</p>
             `
-            }).catch(err => {
-            console.error('Error al enviar email:', err);
-            throw err;
         });
+
+        if (resendError) {
+            console.error('Error Resend:', resendError);
+            throw new Error(resendError.message);
+        }
 
         res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
 
