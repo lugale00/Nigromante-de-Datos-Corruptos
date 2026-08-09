@@ -619,7 +619,7 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
                     <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/nigromante.png" 
                         alt="Nigromante" 
                         style="width: 100px; height: auto;">
-                    <h1 style="font-size: 1.5rem; color: #9b59b6; margin-top: 1rem;">
+                    <h1 style="font-size: 2rem; color: #9b59b6; margin-top: 1rem;">
                         Nigromante de Datos Corruptos
                     </h1>
                 </div>
@@ -649,7 +649,7 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
 
                 <hr style="border-color: #4a2a7a; margin: 2rem 0;">
                 <p style="font-size: 0.8rem; color: #8a6a9a; text-align: center;">
-                    Nigromante de Datos Corruptos — Universidad de Cádiz
+                    Nigromante de Datos Corruptos — Juego educativo de SQL y bases de datos.
                 </p>
             </div>
             `
