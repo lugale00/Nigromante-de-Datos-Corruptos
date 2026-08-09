@@ -609,15 +609,51 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
         const { error: resendError } = await resend.emails.send({
             from: 'Nigromante de Datos Corruptos <onboarding@resend.dev>',
             to: email,
-            subject: 'Código de recuperación de contraseña',
+            subject: '⚰ Código de recuperación — Nigromante de Datos Corruptos',
             html: `
-                <h2>Recuperación de contraseña</h2>
-                <p>Tu código de verificación es:</p>
-                <h1 style="letter-spacing: 0.5rem; color: #6b3fa0;">${codigo}</h1>
-                <p>Este código expira en 15 minutos.</p>
-                <p>Si no has solicitado este código, ignora este correo.</p>
+            <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; 
+                        background-color: #1a0a2e; color: #f5deb3; padding: 2rem; 
+                        border-radius: 8px;">
+                
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/nigromante.png" 
+                        alt="Nigromante" 
+                        style="width: 100px; height: auto;">
+                    <h1 style="font-size: 1.5rem; color: #9b59b6; margin-top: 1rem;">
+                        Nigromante de Datos Corruptos
+                    </h1>
+                </div>
+
+                <p style="font-size: 1rem;">Hola, nigromante.</p>
+                <p style="font-size: 1rem;">
+                    Has solicitado recuperar tu contraseña. 
+                    Usa el siguiente código para verificar tu identidad:
+                </p>
+
+                <div style="text-align: center; margin: 2rem 0;">
+                    <span style="font-size: 2.5rem; font-weight: bold; 
+                                letter-spacing: 0.8rem; color: #9b59b6;
+                                background-color: #2d1b4e; padding: 1rem 2rem;
+                                border-radius: 8px; display: inline-block;">
+                        ${codigo}
+                    </span>
+                </div>
+
+                <p style="font-size: 0.9rem; color: #c0a080;">
+                    ⏱ Este código expira en <strong>15 minutos</strong>.
+                </p>
+                <p style="font-size: 0.9rem; color: #c0a080;">
+                    Si no has solicitado este código, ignora este correo. 
+                    Tu cuenta sigue siendo segura.
+                </p>
+
+                <hr style="border-color: #4a2a7a; margin: 2rem 0;">
+                <p style="font-size: 0.8rem; color: #8a6a9a; text-align: center;">
+                    Nigromante de Datos Corruptos — Universidad de Cádiz
+                </p>
+            </div>
             `
-        });
+});
 
         if (resendError) {
             console.error('Error Resend:', resendError);
