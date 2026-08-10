@@ -711,4 +711,76 @@ game.prototype.verificarRecuperacion = async function (req, res) {
     }
 };
 
+game.prototype.exportarEstadisticas = async function (req, res) {
+    if (req.session.rol !== 'admin') {
+        return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    try {
+        // Datos de estudiantes con sus intentos
+        const estudiantes = await db.query(`
+            SELECT
+                u.nombre,
+                u.email,
+                u.nivel_actual,
+                u.nivel_maximo,
+                u.fecha_registro,
+                COUNT(i.id) AS total_intentos,
+                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
+                SUM(CASE WHEN NOT i.correcto THEN 1 ELSE 0 END) AS fallos,
+                ROUND(
+                    SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) * 100.0 
+                    / NULLIF(COUNT(i.id), 0)
+                , 1) AS tasa_acierto
+            FROM public.usuarios u
+            LEFT JOIN public.intentos i ON i.id_usuario = u.id
+            WHERE u.rol = 'estudiante'
+            GROUP BY u.id
+            ORDER BY u.fecha_registro DESC
+        `);
+
+        // Datos de misiones
+        const misiones = await db.query(`
+            SELECT
+                m.nombre,
+                m.nivel_requerido,
+                COUNT(i.id) AS total_intentos,
+                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos,
+                ROUND(
+                    SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) * 100.0 
+                    / NULLIF(COUNT(i.id), 0)
+                , 1) AS tasa_acierto
+            FROM public.misiones m
+            LEFT JOIN public.intentos i ON i.id_mision = m.id
+            LEFT JOIN public.usuarios u ON i.id_usuario = u.id
+            WHERE u.rol = 'estudiante' OR u.rol IS NULL
+            GROUP BY m.id
+            ORDER BY m.nivel_requerido, m.id
+        `);
+
+        // Actividad diaria
+        const actividad = await db.query(`
+            SELECT
+                DATE(i.fecha) AS dia,
+                COUNT(*) AS total_intentos,
+                SUM(CASE WHEN i.correcto THEN 1 ELSE 0 END) AS aciertos
+            FROM public.intentos i
+            JOIN public.usuarios u ON i.id_usuario = u.id
+            WHERE u.rol = 'estudiante'
+            GROUP BY DATE(i.fecha)
+            ORDER BY dia DESC
+        `);
+
+        res.status(200).json({
+            estudiantes: estudiantes.rows,
+            misiones: misiones.rows,
+            actividad: actividad.rows
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al exportar estadísticas' });
+    }
+};
+
 module.exports = new game();

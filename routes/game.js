@@ -31,6 +31,7 @@ router.get('/admin/stats/usuarios', gameService.statsUsuarios);
 router.get('/admin/stats/misiones', gameService.statsMisiones);
 router.get('/admin/stats/intentos', gameService.statsIntentos);
 router.post('/admin/promover', gameService.promoverUsuario);
+router.get('/admin/exportar', gameService.exportarEstadisticas);
 
 
 module.exports = router;

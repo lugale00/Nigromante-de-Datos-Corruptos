@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     verificarSesionAdmin();
     document.getElementById('cerrar-sesion').addEventListener('click', cerrarSesion);
+    document.getElementById('btn-exportar').addEventListener('click', function() {
+        exportarExcel();
+    });
 });
 
 function verificarSesionAdmin() {
@@ -308,4 +311,59 @@ function renderizarGraficaActividad(dias) {
             }
         }
     });
+}
+
+function exportarExcel() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/game/admin/exportar", true);
+    xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let datos = JSON.parse(xhr.responseText);
+
+            // Creamos el libro Excel
+            let wb = XLSX.utils.book_new();
+
+            // Hoja 1: Estudiantes
+            let estudiantesData = datos.estudiantes.map(u => ({
+                'Nombre': u.nombre,
+                'Email': u.email || '—',
+                'Nivel actual': u.nivel_actual,
+                'Nivel máximo': u.nivel_maximo,
+                'Fecha registro': new Date(u.fecha_registro).toLocaleDateString('es-ES'),
+                'Total intentos': u.total_intentos || 0,
+                'Aciertos': u.aciertos || 0,
+                'Fallos': u.fallos || 0,
+                '% Acierto': u.tasa_acierto ? `${u.tasa_acierto}%` : '0%'
+            }));
+            let ws1 = XLSX.utils.json_to_sheet(estudiantesData);
+            XLSX.utils.book_append_sheet(wb, ws1, 'Estudiantes');
+
+            // Hoja 2: Misiones
+            let misionesData = datos.misiones.map(m => ({
+                'Misión': m.nombre,
+                'Nivel': m.nivel_requerido,
+                'Total intentos': m.total_intentos || 0,
+                'Aciertos': m.aciertos || 0,
+                '% Acierto': m.tasa_acierto ? `${m.tasa_acierto}%` : '0%'
+            }));
+            let ws2 = XLSX.utils.json_to_sheet(misionesData);
+            XLSX.utils.book_append_sheet(wb, ws2, 'Misiones');
+
+            // Hoja 3: Actividad diaria
+            let actividadData = datos.actividad.map(d => ({
+                'Fecha': new Date(d.dia).toLocaleDateString('es-ES'),
+                'Total intentos': d.total_intentos || 0,
+                'Aciertos': d.aciertos || 0
+            }));
+            let ws3 = XLSX.utils.json_to_sheet(actividadData);
+            XLSX.utils.book_append_sheet(wb, ws3, 'Actividad diaria');
+
+            // Generamos el nombre del archivo con la fecha actual
+            let fecha = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `estadisticas_nigromante_${fecha}.xlsx`);
+        }
+    };
+    xhr.send();
 }
