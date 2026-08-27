@@ -501,13 +501,15 @@ function iniciarAutocompletado() {
 // SISTEMA DE TUTORIAL
 // ============================================
 let dialogosTutorial = [];
+let dialogoIndex = 0;
+let enEjercicio = false;
 
 function iniciarTutorial() {
     dialogosTutorial = [];
-    let dialogoIndex = 0;
-    let enEjercicio = false;
-    let tutorialFinalizado = false;
-    let misionActual = null; // limpiamos la misión anterior
+    dialogoIndex = 0;
+    enEjercicio = false;
+    tutorialFinalizado = false;
+    misionActual = null; // limpiamos la misión anterior
 
     document.getElementById('mision').innerHTML = '';
     document.getElementById('feedback-container').innerHTML = '';
