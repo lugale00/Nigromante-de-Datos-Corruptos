@@ -504,10 +504,10 @@ let dialogosTutorial = [];
 
 function iniciarTutorial() {
     dialogosTutorial = [];
-    dialogoIndex = 0;
-    enEjercicio = false;
-    tutorialFinalizado = false;
-    misionActual = null; // limpiamos la misión anterior
+    let dialogoIndex = 0;
+    let enEjercicio = false;
+    let tutorialFinalizado = false;
+    let misionActual = null; // limpiamos la misión anterior
 
     document.getElementById('mision').innerHTML = '';
     document.getElementById('feedback-container').innerHTML = '';
