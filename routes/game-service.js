@@ -560,95 +560,128 @@ game.prototype.cerrarSesion = async function (req, res) {
     });
 };
 
-const Brevo = require('@getbrevo/brevo');
-const brevoClient = new Brevo.TransactionalEmailsApi();
-brevoClient.authentications['apiKey'].apiKey = process.env.BREVO_API_KEY;
+const { BrevoClient } = require('@getbrevo/brevo');
+
+const brevoClient = new BrevoClient({
+    apiKey: process.env.BREVO_API_KEY
+});
 
 // Solicitar código de recuperación
 game.prototype.solicitarRecuperacion = async function (req, res) {
-    console.log('solicitarRecuperacion llamada'); // ← log 1
+    console.log('solicitarRecuperacion llamada');
     const { email } = req.body;
-    console.log('email recibido:', email); // ← log 2
+    console.log('email recibido:', email);
 
     try {
-        console.log('buscando usuario...'); // ← log 3
+        console.log('buscando usuario...');
+
         const result = await db.query(
             'SELECT * FROM public.usuarios WHERE email = $1',
             [email]
         );
-        console.log('usuario encontrado:', result.rows.length); // ← log 4
+
+        console.log('usuario encontrado:', result.rows.length);
 
         if (result.rows.length === 0) {
-            // No revelamos si el email existe por seguridad
-            return res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
+            return res.status(200).json({
+                mensaje: 'Si el correo existe recibirás un código.'
+            });
         }
 
         const usuario = result.rows[0];
 
-        // No permitimos recuperación para cuentas Google
         if (usuario.contrasena === 'google_auth') {
-            return res.status(400).json({ error: 'Esta cuenta usa Google para autenticarse.' });
+            return res.status(400).json({
+                error: 'Esta cuenta usa Google para autenticarse.'
+            });
         }
 
-        // Generamos código de 6 dígitos
-        const codigo = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiracion = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
+        const codigo = Math.floor(
+            100000 + Math.random() * 900000
+        ).toString();
 
-        // Invalidamos códigos anteriores del mismo email
+        const expiracion = new Date(
+            Date.now() + 15 * 60 * 1000
+        );
+
         await db.query(
             'UPDATE public.tokens_recuperacion SET usado = true WHERE email = $1',
             [email]
         );
 
-        // Guardamos el nuevo código
         await db.query(
             'INSERT INTO public.tokens_recuperacion (email, codigo, expiracion) VALUES ($1, $2, $3)',
             [email, codigo, expiracion]
         );
 
-        // Enviamos el email
-        const sendSmtpEmail = new Brevo.SendSmtpEmail();
-        sendSmtpEmail.subject = 'Código de recuperación de contraseña';
-        sendSmtpEmail.to = [{ email: email }];
-        sendSmtpEmail.sender = { 
-            email: process.env.BREVO_EMAIL, 
-            name: 'Nigromante de Datos Corruptos' 
-        };
-        sendSmtpEmail.htmlContent = `
-            <div style="font-family: Arial, sans-serif; max-width: 500px; 
-                        margin: 0 auto; background-color: #1a0a2e; 
-                        color: #f5deb3; padding: 2rem; border-radius: 8px;">
-                <div style="text-align: center; margin-bottom: 2rem;">
-                    <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/nigromante.png" 
-                        alt="Nigromante" style="width: 100px;">
-                    <h1 style="color: #9b59b6;">Nigromante de Datos Corruptos</h1>
-                </div>
-                <p>Hola, nigromante.</p>
-                <p>Tu código de verificación es:</p>
-                <div style="text-align: center; margin: 2rem 0;">
-                    <span style="font-size: 2.5rem; font-weight: bold; 
-                                letter-spacing: 0.8rem; color: #9b59b6;
-                                background-color: #2d1b4e; padding: 1rem 2rem;
-                                border-radius: 8px; display: inline-block;">
-                        ${codigo}
-                    </span>
-                </div>
-                <p style="color: #c0a080;">Este código expira en 15 minutos.</p>
-                <p style="color: #c0a080;">Si no has solicitado este código, ignora este correo.</p>
-                <hr style="border-color: #4a2a7a;">
-                <p style="font-size: 0.8rem; color: #8a6a9a; text-align: center;">
-                    Nigromante de Datos Corruptos — Universidad de Cádiz
-                </p>
-            </div>
-        `;
+        await brevoClient.transactionalEmails.sendTransacEmail({
+            subject: 'Código de recuperación de contraseña',
 
-        await brevoClient.sendTransacEmail(sendSmtpEmail);
+            to: [
+                {
+                    email: email
+                }
+            ],
 
-        res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
+            sender: {
+                email: process.env.BREVO_EMAIL,
+                name: 'Nigromante de Datos Corruptos'
+            },
+
+            htmlContent: `
+                <div style="font-family: Arial, sans-serif; max-width: 500px; 
+                            margin: 0 auto; background-color: #1a0a2e; 
+                            color: #f5deb3; padding: 2rem; border-radius: 8px;">
+
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/nigromante.png" 
+                            alt="Nigromante" style="width: 100px;">
+
+                        <h1 style="color: #9b59b6;">
+                            Nigromante de Datos Corruptos
+                        </h1>
+                    </div>
+
+                    <p>Hola, nigromante.</p>
+
+                    <p>Tu código de verificación es:</p>
+
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <span style="font-size: 2.5rem; font-weight: bold; 
+                                    letter-spacing: 0.8rem; color: #9b59b6;
+                                    background-color: #2d1b4e; padding: 1rem 2rem;
+                                    border-radius: 8px; display: inline-block;">
+                            ${codigo}
+                        </span>
+                    </div>
+
+                    <p style="color: #c0a080;">
+                        Este código expira en 15 minutos.
+                    </p>
+
+                    <p style="color: #c0a080;">
+                        Si no has solicitado este código, ignora este correo.
+                    </p>
+
+                    <hr style="border-color: #4a2a7a;">
+
+                    <p style="font-size: 0.8rem; color: #8a6a9a; text-align: center;">
+                        Nigromante de Datos Corruptos — Universidad de Cádiz
+                    </p>
+                </div>
+            `
+        });
+
+        res.status(200).json({
+            mensaje: 'Si el correo existe recibirás un código.'
+        });
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error al enviar el código.' });
+
+        res.status(500).json({
+            error: 'Error al enviar el código.'
+        });
     }
 };
 
