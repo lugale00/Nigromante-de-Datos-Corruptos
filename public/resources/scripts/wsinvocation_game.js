@@ -501,8 +501,6 @@ function iniciarAutocompletado() {
 // SISTEMA DE TUTORIAL
 // ============================================
 let dialogosTutorial = [];
-let dialogoIndex = 0;
-let enEjercicio = false;
 
 function iniciarTutorial() {
     dialogosTutorial = [];
