@@ -560,8 +560,9 @@ game.prototype.cerrarSesion = async function (req, res) {
     });
 };
 
-const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+const Brevo = require('@getbrevo/brevo');
+const brevoClient = new Brevo.TransactionalEmailsApi();
+brevoClient.authentications['apiKey'].apiKey = process.env.BREVO_API_KEY;
 
 // Solicitar código de recuperación
 game.prototype.solicitarRecuperacion = async function (req, res) {
@@ -606,30 +607,24 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
         );
 
         // Enviamos el email
-        const { error: resendError } = await resend.emails.send({
-            from: 'Nigromante de Datos Corruptos <onboarding@resend.dev>',
-            to: email,
-            subject: '⚰ Código de recuperación — Nigromante de Datos Corruptos',
-            html: `
-            <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; 
-                        background-color: #1a0a2e; color: #f5deb3; padding: 2rem; 
-                        border-radius: 8px;">
-                
+        const sendSmtpEmail = new Brevo.SendSmtpEmail();
+        sendSmtpEmail.subject = 'Código de recuperación de contraseña';
+        sendSmtpEmail.to = [{ email: email }];
+        sendSmtpEmail.sender = { 
+            email: process.env.BREVO_EMAIL, 
+            name: 'Nigromante de Datos Corruptos' 
+        };
+        sendSmtpEmail.htmlContent = `
+            <div style="font-family: Arial, sans-serif; max-width: 500px; 
+                        margin: 0 auto; background-color: #1a0a2e; 
+                        color: #f5deb3; padding: 2rem; border-radius: 8px;">
                 <div style="text-align: center; margin-bottom: 2rem;">
                     <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/nigromante.png" 
-                        alt="Nigromante" 
-                        style="width: 100px; height: auto;">
-                    <h1 style="font-size: 2rem; color: #9b59b6; margin-top: 1rem;">
-                        Nigromante de Datos Corruptos
-                    </h1>
+                        alt="Nigromante" style="width: 100px;">
+                    <h1 style="color: #9b59b6;">Nigromante de Datos Corruptos</h1>
                 </div>
-
-                <p style="font-size: 1rem;">Hola, nigromante.</p>
-                <p style="font-size: 1rem;">
-                    Has solicitado recuperar tu contraseña. 
-                    Usa el siguiente código para verificar tu identidad:
-                </p>
-
+                <p>Hola, nigromante.</p>
+                <p>Tu código de verificación es:</p>
                 <div style="text-align: center; margin: 2rem 0;">
                     <span style="font-size: 2.5rem; font-weight: bold; 
                                 letter-spacing: 0.8rem; color: #9b59b6;
@@ -638,27 +633,16 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
                         ${codigo}
                     </span>
                 </div>
-
-                <p style="font-size: 0.9rem; color: #c0a080;">
-                    ⏱ Este código expira en <strong>15 minutos</strong>.
-                </p>
-                <p style="font-size: 0.9rem; color: #c0a080;">
-                    Si no has solicitado este código, ignora este correo. 
-                    Tu cuenta sigue siendo segura.
-                </p>
-
-                <hr style="border-color: #4a2a7a; margin: 2rem 0;">
+                <p style="color: #c0a080;">Este código expira en 15 minutos.</p>
+                <p style="color: #c0a080;">Si no has solicitado este código, ignora este correo.</p>
+                <hr style="border-color: #4a2a7a;">
                 <p style="font-size: 0.8rem; color: #8a6a9a; text-align: center;">
-                    Nigromante de Datos Corruptos — Juego educativo de SQL y bases de datos.
+                    Nigromante de Datos Corruptos — Universidad de Cádiz
                 </p>
             </div>
-            `
-});
+        `;
 
-        if (resendError) {
-            console.error('Error Resend:', resendError);
-            throw new Error(resendError.message);
-        }
+        await brevoClient.sendTransacEmail(sendSmtpEmail);
 
         res.status(200).json({ mensaje: 'Si el correo existe recibirás un código.' });
 
