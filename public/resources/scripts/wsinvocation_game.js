@@ -128,7 +128,7 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
             let datos = JSON.parse(xhr.responseText);
 
             if (datos.esTutorial) {
-                cambiarAudio('tutorial'); // ✅ música de tutorial
+                cambiarAudio('tutorial'); // música de tutorial
                 iniciarTutorial();
                 return;
             }
@@ -190,7 +190,7 @@ function subirNivel() {
         }
     };
 
-    // ✅ Enviamos la vida actual al backend
+    // Enviamos la vida actual al backend
     xhr.send(JSON.stringify({ vida: vidaActual }));
 }
 
@@ -217,11 +217,11 @@ function mostrarExito(mensaje) { // función para mostrar mensajes de éxito en 
 }
 
 function animarEnemigo() { // función para animar al enemigo cuando recibe un golpe
-    setBloqueado(true); // ✅ bloqueamos durante la animación
+    setBloqueado(true); // bloqueamos durante la animación
     let enemigo = document.querySelector('.enemigo-img');
     let nigromante = document.getElementById('jugador-img');
 
-    // ✅ Cambiamos el sprite del nigromante al de ataque
+    // Cambiamos el sprite del nigromante al de ataque
     nigromante.src = 'resources/images/nigromante_attack.png';
 
     enemigo.classList.add('enemigo-golpeado');
@@ -229,9 +229,9 @@ function animarEnemigo() { // función para animar al enemigo cuando recibe un g
     setTimeout(() => {
         enemigo.classList.remove('enemigo-golpeado');
         reducirVidaEnemigo();
-        setBloqueado(false); // ✅ desbloqueamos tras la animación
+        setBloqueado(false); // desbloqueamos tras la animación
 
-        // ✅ Restauramos el sprite del nigromante
+        // Restauramos el sprite del nigromante
         nigromante.src = 'resources/images/nigromante.png';
     }, 600);
 }
@@ -350,7 +350,7 @@ function siguienteMision() { // función para pasar a la siguiente misión tras 
         return;
     }
 
-    // ✅ Solo en niveles normales restauramos el enemigo
+    // Solo en niveles normales restauramos el enemigo
     document.querySelector('.enemigo').style.opacity = '1';
     document.querySelector('.enemigo').style.transition = '';
     document.querySelectorAll('.vida-enemigo').forEach(c => {
@@ -526,7 +526,7 @@ function iniciarTutorial() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             dialogosTutorial = JSON.parse(xhr.responseText);
-            mostrarDialogo(0); // ✅ siempre desde el primer diálogo
+            mostrarDialogo(0); // siempre desde el primer diálogo
         }
     };
     xhr.send();

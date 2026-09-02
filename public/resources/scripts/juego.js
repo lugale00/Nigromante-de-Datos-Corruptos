@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (sentencia === '') {
             mostrarError('Escribe una sentencia antes de invocar.');
-            return; // ✅ no enviamos nada si está vacío
+            return; // no enviamos nada si está vacío
         }
 
         getConsulta(sentencia);
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        getSoloConsulta(sentencia); // ✅ función nueva que no comprueba la misión
+        getSoloConsulta(sentencia); // función nueva que no comprueba la misión
     });
 
     document.getElementById('tutorial-siguiente').addEventListener('click', function() {

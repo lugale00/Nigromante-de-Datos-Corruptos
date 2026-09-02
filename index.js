@@ -80,7 +80,7 @@ passport.use(new GoogleStrategy({
 const game = require('./routes/game');
 app.use('/game', game);
 
-// ✅ Rutas de Google OAuth
+// Rutas de Google OAuth
 app.get('/game/auth/google',
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );

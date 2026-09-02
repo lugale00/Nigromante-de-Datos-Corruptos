@@ -35,7 +35,7 @@ function cargarDashboard() {
     cargarStatsMisiones();
     cargarStatsActividad();
 
-    // ✅ Listeners de búsqueda
+    // Listeners de búsqueda
     document.getElementById('btn-buscar').addEventListener('click', function() {
         let busqueda = document.getElementById('busqueda').value.trim();
         cargarStatsUsuarios(busqueda);
@@ -46,7 +46,7 @@ function cargarDashboard() {
         cargarStatsUsuarios();
     });
 
-    // ✅ Buscar al pulsar Enter
+    // Buscar al pulsar Enter
     document.getElementById('busqueda').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             let busqueda = document.getElementById('busqueda').value.trim();
@@ -206,7 +206,7 @@ function renderizarGraficaNiveles(usuarios) {
     let nivel4 = usuarios.filter(u => u.nivel_actual == 4).length;
     let nivel5 = usuarios.filter(u => u.nivel_actual == 5).length;
 
-    // ✅ Destruimos el gráfico anterior si existe
+    // Destruimos el gráfico anterior si existe
     let canvas = document.getElementById('grafica-niveles');
     let chartExistente = Chart.getChart(canvas);
     if (chartExistente) chartExistente.destroy();

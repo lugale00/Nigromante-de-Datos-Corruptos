@@ -21,6 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let registrarse = document.getElementById('registrarse');
     registrarse.addEventListener('click', function(event) {
         event.preventDefault();
-        document.location.href = 'registro.html'; // ✅ redirigimos a la nueva página
+        document.location.href = 'registro.html'; // redirigimos a la nueva página
     });
 });

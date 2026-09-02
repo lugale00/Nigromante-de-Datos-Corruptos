@@ -83,7 +83,7 @@ game.prototype.getConsulta = async function (req, res) {
 };
 
 game.prototype.login = async function (req, res) {
-    const { email, contrasena } = req.body; // ✅ ahora usamos email
+    const { email, contrasena } = req.body; // ahora usamos email
 
     try {
         const result = await db.query(
@@ -130,7 +130,7 @@ game.prototype.getSesion = async function (req, res) {
             nombre: req.session.nombre,
             nivel: req.session.nivelUsuario,
             rol: req.session.rol || 'estudiante',
-            vida: vida // ✅ vida de la BD
+            vida: vida // vida de la BD
         });
     } catch (error) {
         console.error(error);
@@ -139,7 +139,7 @@ game.prototype.getSesion = async function (req, res) {
 };
 
 game.prototype.registrar = async function (req, res) {
-    const { nombre, email, contrasena } = req.body; // ✅ añadimos email
+    const { nombre, email, contrasena } = req.body; // añadimos email
 
     try {
         // Comprobamos si el email ya existe
@@ -235,7 +235,7 @@ game.prototype.subirNivel = async function (req, res) {
 
     try {
         const nuevoNivel = nivelUsuario + 1;
-        const vidaActual = req.body.vida || 100; // ✅ vida viene del frontend
+        const vidaActual = req.body.vida || 100; // vida viene del frontend
 
         await db.query(
             'UPDATE public.usuarios SET nivel_actual = $1, nivel_maximo = GREATEST(nivel_maximo, $1), vida = $2 WHERE nombre = $3',
@@ -356,7 +356,7 @@ game.prototype.loginAdmin = async function (req, res) {
 
         req.session.nivelUsuario = usuario.nivel_actual;
         req.session.nombre = usuario.nombre;
-        req.session.rol = 'admin'; // ✅ guardamos el rol en sesión
+        req.session.rol = 'admin'; // guardamos el rol en sesión
 
         res.status(200).json({ mensaje: 'Login correcto' });
 

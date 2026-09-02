@@ -14,7 +14,7 @@ function iniciarAudio(tipo) {
     let srcGuardado = sessionStorage.getItem('audio_src');
     let tiempoGuardado = parseFloat(sessionStorage.getItem('audio_time') || 0);
 
-    // ✅ Si ya está sonando la misma canción continuamos desde donde estaba
+    // Si ya está sonando la misma canción continuamos desde donde estaba
     if (audioActual && !audioActual.paused && audioActual.src.endsWith(encodeURIComponent(src).replace(/%2F/g, '/'))) {
         aplicarSilencio();
         return;
@@ -30,7 +30,7 @@ function iniciarAudio(tipo) {
     audioActual.loop = true;
     audioActual.volume = silenciado ? 0 : 0.4;
 
-    // ✅ Si es la misma canción que antes continuamos desde donde estaba
+    // Si es la misma canción que antes continuamos desde donde estaba
     if (srcGuardado === src && tiempoGuardado > 0) {
         audioActual.currentTime = tiempoGuardado;
     }

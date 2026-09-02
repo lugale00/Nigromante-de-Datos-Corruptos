@@ -64,7 +64,7 @@ function cargarUsuarioHeader() {
             header.appendChild(info);
 
             cambiarEnemigo(sesion.nivel);
-            configurarEnemigo(sesion.nivel); // ✅ configuramos los corazones
+            configurarEnemigo(sesion.nivel); // configuramos los corazones
             aplicarVida(sesion.vida || 100);
         }
     };
@@ -74,7 +74,7 @@ function cargarUsuarioHeader() {
 function cargarUsuarioHeader_menu() {
     let xhr = new XMLHttpRequest();
     xhr.open("GET", "/game/sesion", true);
-    xhr.withCredentials = true; // ✅
+    xhr.withCredentials = true;
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
@@ -103,7 +103,7 @@ function cargarMenu() {
             let btnContinuar = document.getElementById('continuar');
             btnContinuar.textContent = `Continuar: Nivel ${sesion.nivel}`;
 
-            // ✅ Mostramos el botón de dashboard solo si es admin
+            // Mostramos el botón de dashboard solo si es admin
             if (sesion.rol === 'admin') {
                 let btnDashboard = document.getElementById('dashboard');
                 if (btnDashboard) btnDashboard.style.display = 'block';
@@ -141,7 +141,7 @@ function cerrarSesion() {
 
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            sessionStorage.clear(); // ✅ limpiamos también el audio
+            sessionStorage.clear(); // limpiamos también el audio
             window.location.href = 'index.html';
         }
     };
