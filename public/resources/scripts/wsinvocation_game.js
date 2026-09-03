@@ -95,7 +95,7 @@ function comprobarSolucion(resultadoJugador) { // función para enviar la soluci
     xhr.withCredentials = true;
     xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = async function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let respuesta = JSON.parse(xhr.responseText);
             if (respuesta.correcto) {
@@ -123,7 +123,7 @@ function getMisionActual(idMisionActual = null) { // función para obtener la mi
 
     xhr.open("GET", url, true);
     xhr.withCredentials = true;
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = async function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let datos = JSON.parse(xhr.responseText);
 
@@ -161,14 +161,16 @@ function subirNivel() {
     xhr.withCredentials = true;
     xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = async function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let datos = JSON.parse(xhr.responseText);
 
             if (datos.nivelMaximo) {
-                mostrarExito('¡Has completado el juego! Eres el maestro nigromante.');
-                cambiarEnemigo(5);
-                subiendoNivel = false;
+                alert('¡Has completado el juego! Eres el maestro nigromante.');
+                const ok = await nuevoJuego(); // resetea el nivel a 1 en BD y sesión
+                if (ok) {
+                    document.location.href = 'menu.html'; // vuelve al menú
+                }
                 return;
             }
 
@@ -199,7 +201,7 @@ function mostrarError(mensaje) { // función para mostrar mensajes de error en l
     contenedor.innerHTML = '';
     let errorMsg = document.createElement('textarea');
     errorMsg.classList.add('resultado');
-    errorMsg.style.color = '#ff0015';
+    errorMsg.style.color = '#ce0011';
     errorMsg.readOnly = true;
     errorMsg.textContent = mensaje;
     contenedor.appendChild(errorMsg);
@@ -210,7 +212,7 @@ function mostrarExito(mensaje) { // función para mostrar mensajes de éxito en 
     contenedor.innerHTML = '';
     let msg = document.createElement('textarea');
     msg.classList.add('resultado');
-    msg.style.color = '#099709';
+    msg.style.color = '#097909';
     msg.readOnly = true;
     msg.textContent = mensaje;
     contenedor.appendChild(msg);
