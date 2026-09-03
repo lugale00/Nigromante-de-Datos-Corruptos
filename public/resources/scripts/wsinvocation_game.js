@@ -167,10 +167,8 @@ function subirNivel() {
 
             if (datos.nivelMaximo) {
                 alert('¡Has completado el juego! Eres el maestro nigromante.');
-                const ok = await nuevoJuego(); // resetea el nivel a 1 en BD y sesión
-                if (ok) {
-                    document.location.href = 'menu.html'; // vuelve al menú
-                }
+                nuevoJuego(); // resetea el nivel a 1 en BD y sesión
+                document.location.href = 'menu.html'; // vuelve al menú
                 return;
             }
 
@@ -503,6 +501,7 @@ function iniciarAutocompletado() {
 // SISTEMA DE TUTORIAL
 // ============================================
 let dialogosTutorial = [];
+let enEjercicio = false;
 
 function iniciarTutorial() {
     dialogosTutorial = [];
