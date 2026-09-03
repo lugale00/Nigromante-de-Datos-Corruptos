@@ -229,7 +229,9 @@ function animarEnemigo() { // función para animar al enemigo cuando recibe un g
     setTimeout(() => {
         enemigo.classList.remove('enemigo-golpeado');
         reducirVidaEnemigo();
-        setBloqueado(false); // desbloqueamos tras la animación
+        if (!enEjercicio){
+            setBloqueado(false); // desbloqueamos tras la animación
+        }
 
         // Restauramos el sprite del nigromante
         nigromante.src = 'resources/images/nigromante.png';
