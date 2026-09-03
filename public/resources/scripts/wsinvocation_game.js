@@ -668,8 +668,8 @@ function comprobarSolucionTutorial(resultadoJugador) {
                 let btnSiguiente = document.getElementById('tutorial-siguiente');
                 btnSiguiente.disabled = false;
                 btnSiguiente.style.opacity = '1';
-                animarEnemigo();
                 setBloqueado(true);
+                animarEnemigo();
             }
         }
     };
