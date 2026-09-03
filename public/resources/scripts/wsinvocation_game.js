@@ -669,6 +669,7 @@ function comprobarSolucionTutorial(resultadoJugador) {
                 btnSiguiente.disabled = false;
                 btnSiguiente.style.opacity = '1';
                 animarEnemigo();
+                setBloqueado(true);
             }
         }
     };
