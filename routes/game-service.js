@@ -634,7 +634,7 @@ game.prototype.solicitarRecuperacion = async function (req, res) {
                             color: #f5deb3; padding: 2rem; border-radius: 8px;">
 
                     <div style="text-align: center; margin-bottom: 2rem;">
-                        <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/nigromante.png" 
+                        <img src="https://nigromante-de-datos-corruptos.onrender.com/resources/images/grupo_fantasmas.png" 
                             alt="Nigromante" style="width: 100px;">
 
                         <h1 style="color: #9b59b6;">
